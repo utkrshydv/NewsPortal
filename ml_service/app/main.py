@@ -8,21 +8,9 @@ import numpy as np
 from openai import OpenAI
 from dotenv import load_dotenv
 
-from contextlib import asynccontextmanager
-
 load_dotenv()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup: Load models
-    print("Checking ML models...")
-    download_models()
-    load_models_internal()
-    yield
-    # Shutdown: Clean up or free memory if needed
-    print("Shutting down ML service...")
-
-app = FastAPI(title="Fake News Detection API - Multi-Model", lifespan=lifespan)
+app = FastAPI(title="Fake News Detection API - Multi-Model")
 
 
 @app.get("/")
@@ -254,24 +242,24 @@ model_weights = {
 # LOAD MODELS AT STARTUP
 # ================================
 
-def load_models_internal():
+@app.on_event("startup")
+def load_models():
 
     print("Checking ML models...")
 
-    try:
-        download_models()
-    except Exception as e:
-        print(f"Error downloading models: {e}")
-        # We continue even if download fails, as models might exist locally
+    download_models()
 
     global vectorizers, models
 
-    # Load WELFake Vectorizer
     try:
+
         vectorizers['welfake'] = joblib.load(os.path.join(MODELS_DIR, 'tfidf.pkl'))
+
         print("WELFake TF-IDF loaded")
+
     except Exception as e:
-        print(f"Failed loading WELFake TFIDF: {e}")
+
+        print("Failed loading WELFake TFIDF", e)
 
     model_names = [
         'lightgbm',
@@ -283,42 +271,50 @@ def load_models_internal():
         'xgboost'
     ]
 
-    # Load WELFake Models
     for name in model_names:
+
         try:
+
             model_path = os.path.join(MODELS_DIR, f'{name}.pkl')
-            if os.path.exists(model_path):
-                models['welfake'][name] = joblib.load(model_path)
-                print(f"WELFake {name} loaded")
-            else:
-                print(f"WELFake {name} model file not found at {model_path}")
+
+            models['welfake'][name] = joblib.load(model_path)
+
+            print(f"WELFake {name} loaded")
+
         except Exception as e:
-            print(f"Error loading WELFake {name}: {e}")
 
-    # Load LIAR Vectorizer
+            print(e)
+
     try:
-        liar_tfidf_path = os.path.join(LIAR_MODELS_DIR, 'liar_tfidf.pkl')
-        if os.path.exists(liar_tfidf_path):
-            vectorizers['liar'] = joblib.load(liar_tfidf_path)
-            print("LIAR TFIDF loaded")
-        else:
-             print(f"LIAR TFIDF model file not found at {liar_tfidf_path}")
-    except Exception as e:
-        print(f"Failed loading LIAR TFIDF: {e}")
 
-    # Load LIAR Models
+        vectorizers['liar'] = joblib.load(
+            os.path.join(LIAR_MODELS_DIR, 'liar_tfidf.pkl')
+        )
+
+        print("LIAR TFIDF loaded")
+
+    except Exception as e:
+
+        print("Failed loading LIAR TFIDF", e)
+
     for name in model_names:
+
         if name == "lightgbm":
             continue
-        try:
-            path = os.path.join(LIAR_MODELS_DIR, f"{name}_liar.pkl")
-            if os.path.exists(path):
-                models["liar"][name] = joblib.load(path)
-                print(f"LIAR {name} loaded")
-        except Exception as e:
-            print(f"Error loading LIAR {name}: {e}")
 
-    print("All available models loaded.")
+        try:
+
+            path = os.path.join(LIAR_MODELS_DIR, f"{name}_liar.pkl")
+
+            if os.path.exists(path):
+
+                models["liar"][name] = joblib.load(path)
+
+                print(f"LIAR {name} loaded")
+
+        except Exception as e:
+
+            print(e)
 
 
 # ================================
