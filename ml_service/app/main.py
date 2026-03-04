@@ -191,8 +191,14 @@ def generate_reasoning(article_text, consensus):
         return ["AI reasoning engine temporarily unavailable.", "Could not generate analysis points."]
 
 # Paths
-MODELS_DIR = os.path.join(os.path.dirname(__file__), '../../new_models')
-LIAR_MODELS_DIR = os.path.join(os.path.dirname(__file__), '../../liar_ml_models')
+# MODELS_DIR = os.path.join(os.path.dirname(__file__), '../../new_models')
+# LIAR_MODELS_DIR = os.path.join(os.path.dirname(__file__), '../../liar_ml_models')
+
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+MODELS_DIR = os.path.join(BASE_DIR, "new_models")
+LIAR_MODELS_DIR = os.path.join(BASE_DIR, "liar_ml_models")
+
 
 # Global variables to hold models
 models = {
