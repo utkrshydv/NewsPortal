@@ -28,7 +28,8 @@ const SearchPage = () => {
       setError(null);
       
       try {
-        const response = await axios.get(`http://localhost:5000/api/news/search?q=${encodeURIComponent(searchQuery)}`);
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const response = await axios.get(`${baseUrl}/api/news/search?q=${encodeURIComponent(searchQuery)}`);
         
         let rawArticles = [];
         if (Array.isArray(response.data)) {

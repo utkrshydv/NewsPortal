@@ -20,7 +20,8 @@ const NewsDetailPage = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/news/${id}`);
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const response = await axios.get(`${baseUrl}/api/news/${id}`);
         setArticle(response.data);
         setLoading(false);
       } catch (err) {
@@ -49,7 +50,8 @@ const NewsDetailPage = () => {
           category: article.category
         });
 
-        fetch('http://localhost:5000/api/history', {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        fetch(`${baseUrl}/api/history`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

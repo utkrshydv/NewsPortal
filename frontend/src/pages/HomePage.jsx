@@ -48,7 +48,8 @@ const HomePage = () => {
         }
         
         const userId = user._id || user.id;
-        let url = `http://localhost:5000/api/recommendations/${userId}`;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        let url = `${baseUrl}/api/recommendations/${userId}`;
         if (pageToken) {
           url += `?page=${pageToken}`;
         }
@@ -77,9 +78,11 @@ const HomePage = () => {
 
       let url;
       if (category === 'KIIT') {
-        url = `http://localhost:5000/api/news/search?q=${encodeURIComponent('Kalinga Institute of Industrial Technology Bhubaneswar')}`;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        url = `${baseUrl}/api/news/search?q=${encodeURIComponent('Kalinga Institute of Industrial Technology Bhubaneswar')}`;
       } else {
-        url = `http://localhost:5000/api/news?category=${category}`;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        url = `${baseUrl}/api/news?category=${category}`;
       }
 
       if (pageToken) {
