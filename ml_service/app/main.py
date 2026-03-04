@@ -380,8 +380,14 @@ def predict_news(request: PredictRequest):
         
         confidence = 100
         if hasattr(model, "predict_proba"):
-            probs = model.predict_proba(X)[0]
-            confidence = int(max(probs) * 100)
+            probs = model.predict_proba(X)
+            # Some models (like LightGBM for binary) return a 1D array of shape (n_samples,) or just (1,)
+            # Others return (n_samples, n_classes) e.g., (1, 2)
+            if len(probs.shape) == 1:
+                prob = probs[0]
+                confidence = int((prob if prob > 0.5 else 1 - prob) * 100)
+            else:
+                confidence = int(max(probs[0]) * 100)
         elif hasattr(model, "decision_function"):
             conf = model.decision_function(X)[0]
             confidence = int(min(abs(conf) * 100, 100))
