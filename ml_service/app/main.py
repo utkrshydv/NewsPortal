@@ -45,11 +45,15 @@ MODEL_FILES = [
 
 def download_models():
 
+    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
     for file in MODEL_FILES:
 
-        if not os.path.exists(file):
+        local_path = os.path.join(BASE_DIR, file)
 
-            os.makedirs(os.path.dirname(file), exist_ok=True)
+        if not os.path.exists(local_path):
+
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
             url = f"{BASE_MODEL_URL}/{file}"
 
@@ -58,12 +62,11 @@ def download_models():
             r = requests.get(url, stream=True)
             r.raise_for_status()
 
-            with open(file, "wb") as f:
+            with open(local_path, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
 
             print(f"Downloaded {file}")
-
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 groq_client = None
