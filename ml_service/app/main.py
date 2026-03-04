@@ -146,11 +146,23 @@ Article:
         sources = []
 
         for r in results[:3]:
+            # Google Serper API can sometimes return the image thumbnail under various keys
+            # Try exploring `imageUrl`, `thumbnailUrl`, list items, or nested objects
+            image_url = None
+            if r.get("imageUrl"):
+                image_url = r.get("imageUrl")
+            elif r.get("thumbnailUrl"):
+                image_url = r.get("thumbnailUrl")
+            elif "image" in r and isinstance(r["image"], dict) and r["image"].get("url"):
+                image_url = r["image"]["url"]
+            elif r.get("thumbnail"):
+                image_url = r.get("thumbnail")
+
             sources.append({
                 "title": r.get("title"),
                 "url": r.get("link"),
                 "name": urlparse(r.get("link")).netloc.replace("www.", ""),
-                "imageUrl": r.get("imageUrl") or r.get("thumbnail") or None
+                "imageUrl": image_url
             })
 
         score = min(len(sources) * 30, 90)
@@ -179,27 +191,37 @@ def generate_reasoning(article_text, consensus):
     try:
 
         prompt = f"""
-Article classified as {consensus}.
-Give 3 bullet point reasons.
+Analyze the following article text:
+{article_text[:1500]}
+
+This article has been classified by a machine learning ensemble as: {consensus.upper()}.
+Provide exactly 3 concise factual reasons explaining why this classification is appropriate based on the text.
+Output ONLY the 3 bullet points, starting each line with a dash (-). Do not include any introductory or concluding sentences.
 """
 
         response = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=120
+            max_tokens=200,
+            temperature=0.3
         )
 
         content = response.choices[0].message.content
 
-        lines = [l.strip("- ").strip() for l in content.split("\n") if l.strip()]
+        # Extract only the actual reasons, strip dashes/bullets and numbers at the start of the line
+        lines = []
+        for l in content.split("\n"):
+            line = l.lstrip("-*•1234567890. ").strip()
+            if len(line) > 10:  # Ensure it is a valid sentence/reason and not just whitespace or short header
+                lines.append(line)
 
-        return lines[:3]
+        return lines[:3] if len(lines) >= 3 else (lines + ["Additional reasoning points unavailable.", "Insufficient content."])[:3]
 
     except Exception as e:
 
-        print(e)
+        print(f"AI Reasoning Error: {e}")
 
-        return ["AI reasoning failed"]
+        return ["AI reasoning failed due to an error"]
 
 
 # ================================

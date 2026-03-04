@@ -11,8 +11,8 @@ const verifyNews = async (req, res) => {
       return res.status(400).json({ message: 'News text is required.' });
     }
 
-    // Forward the request to the new Python ML Microservice
-    const mlResponse = await axios.post('http://localhost:8000/predict', {
+    // Forward the request to the deployed Python ML Microservice
+    const mlResponse = await axios.post('https://utkrshydv-newsportal.hf.space/predict', {
       text: text,
       dataset: dataset
     });
@@ -23,8 +23,8 @@ const verifyNews = async (req, res) => {
   } catch (error) {
     console.error('Error forwarding to ML service:', error.message);
 
-    if (error.code === 'ECONNREFUSED') {
-      return res.status(503).json({ message: 'ML Microservice is offline. Ensure Python server is running on port 8000.' });
+    if (error.code === 'ECONNREFUSED' || error.response?.status >= 500) {
+      return res.status(503).json({ message: 'ML Microservice is unreachable. Please try again later.' });
     }
 
     res.status(500).json({ message: 'An error occurred during verification.', error: error.message });
