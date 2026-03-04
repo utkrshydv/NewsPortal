@@ -12,6 +12,7 @@ load_dotenv()
 
 app = FastAPI(title="Fake News Detection API - Multi-Model")
 
+
 @app.get("/")
 def health():
     return {"status": "ML service running"}
@@ -68,7 +69,13 @@ def download_models():
 
             print(f"Downloaded {file}")
 
+
+# ================================
+# GROQ CLIENT
+# ================================
+
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+
 groq_client = None
 
 if GROQ_API_KEY:
@@ -82,6 +89,9 @@ if GROQ_API_KEY:
         print(f"Failed to initialize Groq client: {e}")
 
 
+# ================================
+# WEB VERIFICATION
+# ================================
 
 def verify_with_web(article_text):
 
@@ -89,14 +99,13 @@ def verify_with_web(article_text):
 
     if groq_client:
         try:
-            prompt = f"""
-            You are a master at writing Google search queries for fact-checking.
-            Given the following news article text, extract the main verifiable claim and format it as a highly specific 5-7 word search query.
-            Only output the pure search query string.
 
-            Article:
-            {article_text[:1000]}
-            """
+            prompt = f"""
+Extract a short Google search query for fact checking.
+
+Article:
+{article_text[:1000]}
+"""
 
             response = groq_client.chat.completions.create(
                 model="llama-3.1-8b-instant",
@@ -113,7 +122,6 @@ def verify_with_web(article_text):
     if not claim:
         sentences = [s.strip() for s in article_text.split('.') if len(s.strip()) > 10]
         claim = sentences[0] if sentences else article_text[:100]
-
 
     api_key = os.environ.get('SERPER_API_KEY')
 
@@ -138,7 +146,6 @@ def verify_with_web(article_text):
         sources = []
 
         for r in results[:3]:
-
             sources.append({
                 "title": r.get("title"),
                 "url": r.get("link")
@@ -152,9 +159,15 @@ def verify_with_web(article_text):
         }
 
     except Exception as e:
+
         print(f"Search error: {e}")
+
         return {"score": 0, "sources": []}
 
+
+# ================================
+# AI REASONING
+# ================================
 
 def generate_reasoning(article_text, consensus):
 
@@ -164,10 +177,9 @@ def generate_reasoning(article_text, consensus):
     try:
 
         prompt = f"""
-        Article classified as {consensus}.
-
-        Give 3 bullet point reasons.
-        """
+Article classified as {consensus}.
+Give 3 bullet point reasons.
+"""
 
         response = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant",
@@ -188,10 +200,16 @@ def generate_reasoning(article_text, consensus):
         return ["AI reasoning failed"]
 
 
+# ================================
+# MODEL PATHS
+# ================================
+
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 MODELS_DIR = os.path.join(BASE_DIR, "new_models")
+
 LIAR_MODELS_DIR = os.path.join(BASE_DIR, "liar_ml_models")
+
 
 models = {
     'welfake': {},
@@ -204,6 +222,9 @@ vectorizers = {
 }
 
 
+# ================================
+# MODEL WEIGHTS
+# ================================
 
 model_weights = {
     'xgboost': 20.0,
@@ -217,27 +238,28 @@ model_weights = {
 }
 
 
+# ================================
+# LOAD MODELS AT STARTUP
+# ================================
 
 @app.on_event("startup")
 def load_models():
 
     print("Checking ML models...")
 
-    download_models()   # <-- ADDED HERE
+    download_models()
 
     global vectorizers, models
 
-    tfidf_welfake_path = os.path.join(MODELS_DIR, 'tfidf.pkl')
-
     try:
 
-        vectorizers['welfake'] = joblib.load(tfidf_welfake_path)
+        vectorizers['welfake'] = joblib.load(os.path.join(MODELS_DIR, 'tfidf.pkl'))
 
         print("WELFake TF-IDF loaded")
 
     except Exception as e:
 
-        print(e)
+        print("Failed loading WELFake TFIDF", e)
 
     model_names = [
         'lightgbm',
@@ -263,17 +285,17 @@ def load_models():
 
             print(e)
 
-
     try:
 
-        vectorizers['liar'] = joblib.load(os.path.join(LIAR_MODELS_DIR, 'liar_tfidf.pkl'))
+        vectorizers['liar'] = joblib.load(
+            os.path.join(LIAR_MODELS_DIR, 'liar_tfidf.pkl')
+        )
 
         print("LIAR TFIDF loaded")
 
     except Exception as e:
 
-        print(e)
-
+        print("Failed loading LIAR TFIDF", e)
 
     for name in model_names:
 
@@ -295,6 +317,10 @@ def load_models():
             print(e)
 
 
+# ================================
+# REQUEST SCHEMA
+# ================================
+
 class PredictRequest(BaseModel):
 
     text: str
@@ -302,11 +328,21 @@ class PredictRequest(BaseModel):
     dataset: str = "welfake"
 
 
+# ================================
+# PREDICT ENDPOINT
+# ================================
+
 @app.post("/predict")
 
 def predict_news(request: PredictRequest):
 
-    dataset = request.dataset
+    dataset = request.dataset.lower()
+
+    if dataset not in vectorizers:
+        raise HTTPException(status_code=400, detail="Invalid dataset")
+
+    if vectorizers[dataset] is None:
+        raise HTTPException(status_code=500, detail="Vectorizer not loaded")
 
     X = vectorizers[dataset].transform([request.text])
 
