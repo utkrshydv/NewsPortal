@@ -148,7 +148,9 @@ Article:
         for r in results[:3]:
             sources.append({
                 "title": r.get("title"),
-                "url": r.get("link")
+                "url": r.get("link"),
+                "name": urlparse(r.get("link")).netloc.replace("www.", ""),
+                "imageUrl": r.get("imageUrl") or r.get("thumbnail") or None
             })
 
         score = min(len(sources) * 30, 90)
@@ -333,7 +335,6 @@ class PredictRequest(BaseModel):
 # ================================
 
 @app.post("/predict")
-
 def predict_news(request: PredictRequest):
 
     dataset = request.dataset.lower()
@@ -347,27 +348,65 @@ def predict_news(request: PredictRequest):
     X = vectorizers[dataset].transform([request.text])
 
     results = {}
+    ml_fake_weight = 0
+    total_ml_weight = 0
 
     for name, model in models[dataset].items():
-
+        # Get prediction and probability if possible
         pred = model.predict(X)[0]
-
         label = "Real" if pred == 1 else "Fake"
+        
+        confidence = 100
+        if hasattr(model, "predict_proba"):
+            probs = model.predict_proba(X)[0]
+            confidence = int(max(probs) * 100)
+        elif hasattr(model, "decision_function"):
+            conf = model.decision_function(X)[0]
+            confidence = int(min(abs(conf) * 100, 100))
 
         results[name] = {
-            "prediction": label
+            "prediction": label,
+            "confidence": confidence
         }
 
-    web = verify_with_web(request.text)
+        # Weighted calculation for ML consensus
+        weight = model_weights.get(name, 0)
+        if weight > 0:
+            total_ml_weight += weight
+            if label == "Fake":
+                ml_fake_weight += weight
 
-    analysis = generate_reasoning(request.text, "Fake")
+    # Calculate base ML score
+    ml_score = ml_fake_weight / total_ml_weight if total_ml_weight > 0 else 0.5
+    
+    # Web verification adjustment
+    web = verify_with_web(request.text)
+    web_credibility = web.get("score", 0) / 100.0 # 0.0 to 0.9
+    
+    # Simple adjustment logic
+    # If cred is high (>0.7), nudge towards the label supported by sources
+    # Here we simplify: if high web cred, it supports "Real", so subtract from fake score
+    web_adjustment = 0
+    if web_credibility > 0.5:
+        web_adjustment = -0.1 * (web_credibility - 0.5)
+    elif web_credibility < 0.3:
+        web_adjustment = 0.1 * (0.3 - web_credibility)
+        
+    final_score = max(0, min(1, ml_score + web_adjustment))
+    
+    consensus_label = "Fake" if final_score >= 0.5 else "Real"
+    
+    analysis = generate_reasoning(request.text, consensus_label)
 
     return {
-
         "results": results,
-
         "web_verification": web,
-
-        "analysis": analysis
-
+        "analysis": analysis,
+        "weighted_consensus": {
+            "prediction": consensus_label,
+            "ml_score": ml_score,
+            "web_adjustment": web_adjustment,
+            "final_score": final_score,
+            "weights_used": {k: v for k, v in model_weights.items() if k in results or k == 'web_search'}
+        }
     }

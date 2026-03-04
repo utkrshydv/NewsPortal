@@ -507,8 +507,15 @@ const VerifyNewsPage = () => {
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             {webVerification.sources.map((src, idx) => (
                               <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--background-color)', padding: '1rem 1.25rem', borderRadius: '1rem', border: '1px solid var(--border-color)', transition: 'transform 0.2s', '&:hover': {transform: 'translateY(-2px)'} }}>
-                                 <span style={{ fontSize: '1.25rem', fontWeight: 700, minWidth: '120px' }}>{src.name}</span>
-                                 <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{src.title}</span>
+                                 {src.imageUrl && (
+                                   <div style={{ width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden', flexShrink: 0, border: '1px solid var(--border-color)' }}>
+                                     <img src={src.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                   </div>
+                                 )}
+                                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+                                   <span style={{ fontSize: '1.25rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{src.name}</span>
+                                   <span style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{src.title}</span>
+                                 </div>
                                  <a href={src.url} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--primary-color)', textDecoration: 'none', fontWeight: 600, padding: '0.5rem 1rem', background: 'rgba(79, 70, 229, 0.1)', borderRadius: '0.5rem', transition: 'background 0.2s', flexShrink: 0 }} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(79, 70, 229, 0.2)'} onMouseOut={(e) => e.currentTarget.style.background = 'rgba(79, 70, 229, 0.1)'}>
                                    View <ExternalLink size={16} />
                                  </a>
