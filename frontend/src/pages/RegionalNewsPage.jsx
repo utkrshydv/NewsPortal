@@ -155,10 +155,10 @@ const RegionalNewsPage = () => {
         gridTemplateColumns: 'minmax(400px, 0.8fr) 1fr', 
         gap: '2.5rem', 
         alignItems: 'start' 
-      }}>
+      }} className="regional-main-grid">
         
         {/* LEFT COLUMN: THE MAP COMMAND CARD */}
-        <div className="animate-fade-in-up" style={{ 
+        <div className="animate-fade-in-up regional-map-sticky" style={{ 
           position: 'sticky', 
           top: '6rem', 
           display: 'flex',
@@ -168,17 +168,17 @@ const RegionalNewsPage = () => {
           width: '100%',
         }}>
           {/* Main Control Panel for Map */}
-          <div className="command-card" style={{ 
+          <div className="command-card regional-map-card" style={{ 
             width: '100%',
             padding: '2rem',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             position: 'relative',
-            overflow: 'visible' // Important: ensures the map doesn't crop at edges
+            overflow: 'visible'
           }}>
             {/* State Indicator & Instruction - Top Bar */}
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', minHeight: '32px' }}>
+            <div className="regional-state-bar" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', minHeight: '32px', flexWrap: 'wrap', gap: '0.5rem' }}>
               <p style={{ 
                 fontSize: '0.85rem', 
                 color: 'var(--text-muted)', 
@@ -193,21 +193,23 @@ const RegionalNewsPage = () => {
               
               {selectedState && (
                 <div 
-                  className="animate-fade-in-up"
+                  className="animate-fade-in-up regional-state-badge"
                   style={{ 
-                    display: 'flex', 
+                    display: 'inline-flex', 
                     alignItems: 'center', 
                     gap: '0.5rem', 
                     background: 'var(--primary)', 
                     color: 'white', 
-                    padding: '0.4rem 1rem', 
+                    padding: '0.35rem 0.85rem', 
                     borderRadius: '9999px',
                     fontSize: '0.85rem',
                     fontWeight: 600,
-                    boxShadow: '0 4px 12px rgba(92, 56, 235, 0.3)'
+                    boxShadow: '0 4px 12px rgba(92, 56, 235, 0.3)',
+                    whiteSpace: 'nowrap',
+                    maxWidth: '100%',
                   }}
                 >
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'white', animation: 'pulse-soft 2s infinite' }} />
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'white', animation: 'pulse-soft 2s infinite', flexShrink: 0 }} />
                   {selectedState}
                 </div>
               )}

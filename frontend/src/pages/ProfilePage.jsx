@@ -38,8 +38,10 @@ const ProfilePage = () => {
   });
   const [isLoadingInsights, setIsLoadingInsights] = useState(false);
 
-  // Lock outer scrollbar while on the dashboard
+  // Lock outer scrollbar on desktop only (mobile needs natural scroll for stacked layout)
   useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return; // let mobile scroll naturally
     const originalStyle = window.getComputedStyle(document.body).overflow;
     document.body.style.overflow = 'hidden';
     return () => {
@@ -155,7 +157,7 @@ const ProfilePage = () => {
     <div className="profile-dashboard-shell" style={{ display: 'flex', height: 'calc(100vh - 84px)', background: 'var(--bg-main)', overflow: 'hidden' }}>
       
       {/* FIXED SIDEBAR (LEFT) */}
-      <div style={{ 
+      <div className="profile-sidebar" style={{ 
         flex: '0 0 400px', 
         borderRight: '1px solid var(--border-color)',
         background: 'rgba(255, 255, 255, 0.01)',
@@ -259,7 +261,7 @@ const ProfilePage = () => {
       </div>
 
       {/* DASHBOARD WORKSPACE (RIGHT) */}
-      <div style={{ 
+      <div className="profile-workspace" style={{ 
         flex: '1', 
         height: 'calc(100vh - 84px)', 
         overflowY: 'auto', 

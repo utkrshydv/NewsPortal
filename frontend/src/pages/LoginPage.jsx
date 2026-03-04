@@ -4,6 +4,17 @@ import { AuthContext } from '../context/AuthContext';
 import { Eye, EyeOff, Newspaper } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 
+const useIsMobile = () => {
+  const mq = window.matchMedia('(max-width: 768px)');
+  const [m, setM] = useState(mq.matches);
+  useEffect(() => {
+    const h = (e) => setM(e.matches);
+    mq.addEventListener('change', h);
+    return () => mq.removeEventListener('change', h);
+  }, []);
+  return m;
+};
+
 const QUOTES = [
   { text: "The more you read, the more things you will know.", author: "Dr. Seuss" },
   { text: "An informed citizen is the heart of a democracy.", author: "Thomas Jefferson" },
@@ -17,6 +28,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login, googleLogin, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
   useEffect(() => { if (user) navigate('/'); }, [user, navigate]);
@@ -62,14 +74,18 @@ const LoginPage = () => {
       `}</style>
 
       {/* ── CARD ── */}
-      <div style={{ display:'flex', width:'100%', maxWidth:900, height:620, borderRadius:24, overflow:'hidden', boxShadow:'0 8px 40px rgba(67,56,202,0.13), 0 2px 8px rgba(0,0,0,0.08)' }}>
+      <div className="auth-card" style={{ display:'flex', flexDirection: isMobile ? 'column' : 'row', width:'100%', maxWidth: isMobile ? '100%' : 900, height: isMobile ? 'auto' : 620, minHeight: isMobile ? '100vh' : 'auto', borderRadius: isMobile ? 0 : 24, overflow:'hidden', boxShadow: isMobile ? 'none' : '0 8px 40px rgba(67,56,202,0.13), 0 2px 8px rgba(0,0,0,0.08)' }}>
 
         {/* ── LEFT PANEL ── */}
-        <div style={{
-        flex: '0 0 44%', position: 'relative', overflow: 'hidden',
+        <div className="auth-left-panel" style={{
+        flex: isMobile ? 'none' : '0 0 42%',
+        width: isMobile ? '100%' : undefined,
+        height: isMobile ? 185 : undefined,
+        position: 'relative', overflow: 'hidden',
         background: 'linear-gradient(160deg, #0d0221 0%, #1a0533 20%, #2d0f6b 40%, #6b21a8 60%, #c026d3 80%, #f43f5e 100%)',
-        display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-        padding: '36px', flex: '0 0 42%',
+        display: 'flex', flexDirection: 'column',
+        justifyContent: isMobile ? 'flex-end' : 'space-between',
+        padding: isMobile ? '24px 24px 20px' : '36px',
       }}>
         {/* Decorative orbs */}
         <div style={{ position:'absolute', top:'-80px', left:'-80px', width:320, height:320, borderRadius:'50%', background:'radial-gradient(circle, rgba(236,72,153,0.45) 0%, transparent 70%)', pointerEvents:'none' }} />
@@ -88,10 +104,10 @@ const LoginPage = () => {
           }}>
             Stay Informed.<br />Stay Ahead.
           </h2>
-          <p style={{ fontSize:14, color:'rgba(255,255,255,0.65)', lineHeight:1.7, margin:'0 0 2.5rem', maxWidth:340 }}>
+          <p className="auth-banner-hide" style={{ fontSize:14, color:'rgba(255,255,255,0.65)', lineHeight:1.7, margin:'0 0 2.5rem', maxWidth:340 }}>
             "{quote.text}"
           </p>
-          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+          <div className="auth-banner-hide" style={{ display:'flex', alignItems:'center', gap:8 }}>
             <div style={{ width:24, height:24, borderRadius:6, background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center' }}>
               <Newspaper size={13} color="white" />
             </div>
@@ -103,10 +119,12 @@ const LoginPage = () => {
       </div>
 
         {/* ── RIGHT PANEL ── */}
-        <div style={{
+        <div className="auth-right-panel" style={{
           flex: 1, display:'flex', flexDirection:'column',
-          justifyContent:'center', alignItems:'center',
-          padding:'40px 36px', overflowY:'auto', background:'#fff',
+          justifyContent: isMobile ? 'flex-start' : 'center',
+          alignItems: isMobile ? 'stretch' : 'center',
+          padding: isMobile ? '28px 20px 40px' : '40px 36px',
+          overflowY:'auto', background:'#fff',
         }}>
         <div style={{ width:'100%', maxWidth:400 }}>
           {/* Logo */}

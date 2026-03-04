@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Loader2, AlertCircle, Sparkles } from 'lucide-react';
 import NewsCard from '../components/NewsCard';
 import TrendingSection from '../components/TrendingSection';
+import WeatherWidget from '../components/WeatherWidget';
+import MobileHomePage from '../components/MobileHomePage';
 import { AuthContext } from '../context/AuthContext';
 import userService from '../services/userService';
 
@@ -11,6 +13,17 @@ const CATEGORIES = ['For You', 'General', 'Business', 'Technology', 'Science', '
 // Global cache outside component to persist across navigation
 const categoryCache = {};
 const globalNewsCache = new Map(); // Store all fetched articles
+
+// Hook: returns true when viewport is mobile-sized
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return isMobile;
+};
 
 const HomePage = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -241,12 +254,25 @@ const HomePage = () => {
     return pattern[index % pattern.length];
   };
 
+  const isMobile = useIsMobile();
+
   return (
+    // On mobile: render horizontal category sections layout
+    // On desktop: render existing filter pills + news grid (unchanged)
+    isMobile ? (
+      <MobileHomePage user={user} />
+    ) : (
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
-        <div>
-          <h1 className="page-title" style={{ marginBottom: '0.5rem' }}>Your Briefing</h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Top stories tailored for you today.</p>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', width: '100%' }}>
+          <div>
+            <h1 className="page-title" style={{ marginBottom: '0.5rem' }}>Your Briefing</h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Top stories tailored for you today.</p>
+          </div>
+          {/* Weather widget — only visible on mobile (hidden on desktop via CSS) */}
+          <div className="homepage-mobile-weather">
+            <WeatherWidget />
+          </div>
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
@@ -338,6 +364,7 @@ const HomePage = () => {
         </>
       )}
     </div>
+    ) // end desktop layout ternary branch
   );
 };
 

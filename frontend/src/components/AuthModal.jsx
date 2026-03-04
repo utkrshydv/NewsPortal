@@ -234,7 +234,7 @@ const AuthModal = () => {
 
   if (!isOpen || user) return null;
 
-  const onClose = () => navigate('/');
+  const onClose    = () => navigate('/');
   const toLogin    = () => navigate('/login');
   const toRegister = () => navigate('/register');
 
@@ -246,29 +246,74 @@ const AuthModal = () => {
         background:'rgba(15,23,42,0.55)',
         backdropFilter:'blur(6px)', WebkitBackdropFilter:'blur(6px)',
         display:'flex', alignItems:'center', justifyContent:'center',
-        padding:'20px', animation:'am-fade .2s ease',
+        padding:'0', animation:'am-fade .2s ease',
         overflowY:'auto',
       }}
     >
       <style>{`
         @keyframes am-fade { from{opacity:0} to{opacity:1} }
         @keyframes am-rise { from{opacity:0;transform:translateY(14px) scale(.98)} to{opacity:1;transform:none} }
+
+        /* Desktop: normal side-by-side card */
+        .auth-modal-card {
+          display: flex;
+          width: 100%;
+          max-width: 980px;
+          height: 660px;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+          animation: am-rise .3s cubic-bezier(.16,1,.3,1);
+          font-family: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+          margin: 20px;
+        }
+        .auth-left-panel-modal {
+          flex: 0 0 40%;
+          position: relative;
+          overflow: hidden;
+          background: linear-gradient(160deg,#0d0221 0%,#1e1050 25%,#4338ca 60%,#7c3aed 85%,#a855f7 100%);
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 36px;
+        }
+        .auth-right-panel-modal {
+          flex: 1;
+          background: #fff;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 36px 40px;
+          overflow-y: auto;
+          position: relative;
+        }
+
+        /* Mobile: floating modal, no image panel */
+        @media (max-width: 768px) {
+          .auth-modal-card {
+            max-width: 92vw !important;
+            width: 92vw !important;
+            height: auto !important;
+            min-height: unset !important;
+            border-radius: 20px !important;
+            margin: 0 !important;
+            flex-direction: column !important;
+          }
+          .auth-left-panel-modal {
+            display: none !important;
+          }
+          .auth-right-panel-modal {
+            padding: 36px 24px 32px !important;
+            justify-content: flex-start !important;
+          }
+        }
       `}</style>
 
       {/* ── CARD ── */}
-      <div style={{ display:'flex', width:'100%', maxWidth:'980px', height:'660px',
-        borderRadius:'20px', overflow:'hidden',
-        boxShadow:'0 32px 80px rgba(0,0,0,0.35)',
-        animation:'am-rise .3s cubic-bezier(.16,1,.3,1)',
-        fontFamily:"'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
-      }}>
+      <div className="auth-modal-card">
 
-        {/* LEFT — gradient hero panel */}
-        <div style={{
-          flex:'0 0 40%', position:'relative', overflow:'hidden',
-          background:'linear-gradient(160deg,#0d0221 0%,#1e1050 25%,#4338ca 60%,#7c3aed 85%,#a855f7 100%)',
-          display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'36px',
-        }}>
+        {/* LEFT — gradient hero panel (hidden on mobile) */}
+        <div className="auth-left-panel-modal">
           {/* Orbs */}
           <div style={{position:'absolute',top:'-60px',right:'-60px',width:240,height:240,borderRadius:'50%',background:'radial-gradient(circle,rgba(168,85,247,0.45) 0%,transparent 70%)',pointerEvents:'none'}} />
           <div style={{position:'absolute',bottom:'-50px',left:'-50px',width:200,height:200,borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,0.4) 0%,transparent 70%)',pointerEvents:'none'}} />
@@ -295,10 +340,7 @@ const AuthModal = () => {
         </div>
 
         {/* RIGHT — form panel */}
-        <div style={{
-          flex:1, background:'#fff', display:'flex', flexDirection:'column',
-          justifyContent:'center', padding:'36px 40px', overflowY:'auto', position:'relative',
-        }}>
+        <div className="auth-right-panel-modal">
           {/* Close button */}
           <button onClick={onClose} style={{
             position:'absolute', top:16, right:16, width:30, height:30,

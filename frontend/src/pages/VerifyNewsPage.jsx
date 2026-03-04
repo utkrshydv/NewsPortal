@@ -222,7 +222,7 @@ const VerifyNewsPage = () => {
         {/* Soft decorative glow inside the card */}
         <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '300px', background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)', opacity: 0.1, pointerEvents: 'none', filter: 'blur(60px)' }}></div>
         
-        <div style={{ 
+        <div className="verify-main-grid" style={{ 
           display: 'grid', 
           gridTemplateColumns: '1fr 1.2fr', 
           gap: '3rem', 
@@ -237,7 +237,7 @@ const VerifyNewsPage = () => {
               <BrainCircuit size={32} color="var(--primary)" />
             </div>
             
-            <h1 style={{ 
+            <h1 className="verify-hero-title" style={{ 
               fontSize: '3.5rem', 
               fontWeight: 800, 
               letterSpacing: '-0.03em', 
@@ -392,7 +392,7 @@ const VerifyNewsPage = () => {
             </button>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+          <div className="verify-results-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
             
             {/* Verdict Card */}
             <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden' }}>

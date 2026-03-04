@@ -721,3 +721,651 @@ a {
     transform: rotate(360deg);
   }
 }
+
+/* ============================================================
+   MOBILE RESPONSIVENESS
+   All overrides are ADDITIONS below this line.
+   Zero desktop styles above have been changed.
+   ============================================================ */
+
+/* Mobile search bar — hidden on desktop by default */
+.mobile-search-bar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  padding: 0.6rem 1.25rem 0.75rem;
+  background: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Weather widget in "Your Briefing" row — hidden on desktop (already in header) */
+.homepage-mobile-weather {
+  display: none;
+}
+
+/* Mobile Drawer Slide-down Animation */
+@keyframes mobileDrawerIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TABLET (≤1024px) ─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .header {
+    padding: 1rem 2rem;
+  }
+
+  .container {
+    padding: 0.5rem 1.5rem 2rem 1.5rem;
+  }
+}
+
+/* ── MOBILE (≤768px) ──────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* --- Header --- */
+  .header {
+    padding: 1.25rem 1.25rem;
+    gap: 0;
+  }
+
+  .header-search-form {
+    display: none !important;
+  }
+
+  .header-desktop-nav {
+    display: none !important;
+  }
+
+  .header-mobile-controls {
+    display: flex !important;
+  }
+
+  /* Mobile sticky search bar — shown below header on mobile */
+  .mobile-search-bar {
+    display: block;
+  }
+
+  /* Weather widget next to "Your Briefing" on mobile */
+  .homepage-mobile-weather {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* --- Container & Typography --- */
+  .container {
+    padding: 0.5rem 1rem 2rem 1rem;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .detail-title {
+    font-size: 1.75rem !important;
+  }
+
+  .detail-image {
+    height: 220px;
+  }
+
+  .detail-container {
+    padding: 1.5rem 1rem;
+  }
+
+  /* --- Regional News Page --- */
+  .regional-page-root {
+    padding: 1.25rem 1rem !important;
+    gap: 1.5rem !important;
+  }
+
+  .regional-page-root h1 {
+    font-size: 2rem !important;
+  }
+
+  /* Stack map + feed column */
+  .regional-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Unpin sticky map card on mobile */
+  .regional-map-sticky {
+    position: static !important;
+  }
+
+  /* Smaller cards in regional grid */
+  .regional-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  /* --- Verify News Page --- */
+  .verify-page {
+    padding: 1rem !important;
+  }
+
+  .verify-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  .verify-page .command-card {
+    padding: 1.5rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .verify-hero-title {
+    font-size: 2.2rem !important;
+  }
+
+  .verify-results-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  /* --- Profile Dashboard --- */
+  .profile-dashboard-shell {
+    flex-direction: column !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .profile-sidebar {
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    overflow: visible !important;
+  }
+
+  .profile-workspace {
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 1.5rem 1.25rem !important;
+    overflow: visible !important;
+  }
+
+  /* --- News Grid --- */
+  .news-grid {
+    gap: 1rem;
+  }
+}
+
+/* ── SMALL MOBILE (≤480px) ────────────────────────────────── */
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  .detail-title {
+    font-size: 1.5rem !important;
+  }
+
+  .detail-image {
+    height: 180px;
+  }
+
+  .card-hero .news-card-content {
+    padding: 1.25rem !important;
+  }
+
+  .card-hero .news-card-title {
+    font-size: 1.25rem !important;
+  }
+
+  .verify-hero-title {
+    font-size: 1.85rem !important;
+  }
+}
+
+/* ================================================================
+   MOBILE CATEGORY SECTIONS — MobileHomePage / MobileCategorySection
+   All styles are new additions. No desktop styles are affected.
+   ================================================================ */
+
+/* ── Greeting bar ────────────────────────────────────────────── */
+.mobile-greeting-bar {
+  display: none; /* hidden on desktop */
+}
+
+/* ── Category section container ────────────────────────────── */
+.mobile-cat-section {
+  display: none; /* hidden on desktop */
+}
+
+/* ── Spotlight break ────────────────────────────────────────── */
+.mobile-spotlight-break {
+  display: none; /* hidden on desktop */
+}
+
+/* ── Full mobile homepage wrapper ───────────────────────────── */
+.mobile-homepage {
+  display: none; /* hidden on desktop */
+}
+
+/* ── MOBILE (≤768px): show everything ──────────────────────── */
+@media (max-width: 768px) {
+
+  /* Greeting bar */
+  .mobile-greeting-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.25rem 0.75rem;
+  }
+
+  .mobile-greeting-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.2rem 0;
+  }
+
+  .mobile-greeting-heading {
+    font-size: 1.6rem;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.03em;
+    color: var(--secondary);
+    margin: 0;
+  }
+
+  /* Full homepage wrapper */
+  .mobile-homepage {
+    display: block;
+    padding-bottom: 2rem;
+  }
+
+  /* ── Category section ── */
+  .mobile-cat-section {
+    display: block;
+    padding: 1.25rem 0 0 0;
+  }
+
+  /* Section header row */
+  .mobile-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem 0.75rem;
+  }
+
+  .mobile-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+  }
+
+  .mobile-section-icon {
+    font-size: 1.1rem;
+  }
+
+  .mobile-section-see-all {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 0.3rem 0.65rem;
+    border-radius: 9999px;
+    background: rgba(92, 56, 235, 0.08);
+    transition: background 0.2s;
+  }
+
+  .mobile-section-see-all:active {
+    background: rgba(92, 56, 235, 0.18);
+  }
+
+  /* Loading state */
+  .mobile-section-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* Empty state */
+  .mobile-section-empty {
+    padding: 1.5rem 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* ── Lead card (first article in section) ── */
+  .mobile-lead-card {
+    display: block;
+    margin: 0 1.25rem 1rem;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .mobile-lead-card:active {
+    transform: scale(0.98);
+    box-shadow: none;
+  }
+
+  .mobile-lead-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+  }
+
+  .mobile-lead-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .mobile-lead-card:active .mobile-lead-img-wrap img {
+    transform: scale(1.03);
+  }
+
+  .mobile-lead-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.35) 100%);
+    pointer-events: none;
+  }
+
+  .mobile-lead-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .mobile-lead-content {
+    padding: 0.9rem 1rem 0.85rem;
+  }
+
+  .mobile-lead-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.4rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .mobile-lead-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0 0 0.6rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .mobile-lead-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mobile-lead-source {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(92, 56, 235, 0.08);
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+  }
+
+  .mobile-lead-date {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  /* ── Horizontal scroll strip ── */
+  .mobile-card-strip-wrap {
+    padding-bottom: 1.25rem;
+    overflow: hidden;
+  }
+
+  .mobile-card-strip {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding: 0.25rem 1.25rem 0.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-card-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Mini card (in strip) ── */
+  .mobile-news-card-mini {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 155px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    scroll-snap-align: start;
+    transition: transform 0.2s;
+  }
+
+  .mobile-news-card-mini:active {
+    transform: scale(0.96);
+  }
+
+  .mobile-mini-img-wrap {
+    width: 100%;
+    height: 95px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .mobile-mini-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mobile-mini-content {
+    padding: 0.6rem 0.65rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+  }
+
+  .mobile-mini-source {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+  }
+
+  .mobile-mini-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.35;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .mobile-mini-date {
+    font-size: 0.68rem;
+    color: var(--text-light);
+    font-weight: 500;
+    margin-top: auto;
+  }
+
+  /* ── Trending spotlight card between category sections ── */
+  .mobile-spotlight-break {
+    display: block;
+    margin: 0.5rem 1rem 1rem;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(92,56,235,0.07) 0%, rgba(168,85,247,0.06) 50%, rgba(6,182,212,0.05) 100%);
+    border: 1.5px solid rgba(92, 56, 235, 0.18);
+    box-shadow: 0 2px 12px rgba(92, 56, 235, 0.08);
+    position: relative;
+  }
+
+  /* Top label bar: "Trending across all topics" at top-left */
+  .mobile-spotlight-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem 0.5rem;
+    border-bottom: 1px solid rgba(92, 56, 235, 0.12);
+    background: rgba(92, 56, 235, 0.05);
+  }
+
+  .mobile-spotlight-label span {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mobile-spotlight-icon {
+    color: var(--accent-amber);
+    flex-shrink: 0;
+  }
+
+  /* Content area inside the box */
+  .mobile-spotlight-inner {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+}
+
+/* ================================================================
+   REGIONAL MAP — State bubble mobile fix
+   ================================================================ */
+@media (max-width: 768px) {
+  .regional-map-card {
+    padding: 1.25rem !important;
+  }
+
+  .regional-state-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .regional-state-bar p {
+    font-size: 0.75rem !important;
+  }
+
+  .regional-state-badge {
+    font-size: 0.8rem !important;
+    padding: 0.3rem 0.75rem !important;
+  }
+}
+
+/* ================================================================
+   AUTH PAGES — Mobile: left panel as top banner, form scrolls below
+   ================================================================ */
+@media (max-width: 768px) {
+
+  /* Wrap the two-panel card to stack vertically */
+  .auth-card {
+    flex-direction: column !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    min-height: 100vh;
+  }
+
+  /* Left gradient panel → compact top banner (no scroll, fixed height) */
+  .auth-left-panel {
+    flex: none !important;
+    width: 100% !important;
+    height: 185px !important;
+    padding: 24px 24px 18px !important;
+    justify-content: flex-end !important;
+  }
+
+  .auth-left-panel h2 {
+    font-size: 1.8rem !important;
+    margin-bottom: 0 !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  /* Hide paragraph text and branding row in banner — keep it tight */
+  .auth-left-panel .auth-banner-hide {
+    display: none !important;
+  }
+
+  /* Right white panel → full-width scrollable form area */
+  .auth-right-panel {
+    flex: 1 !important;
+    width: 100% !important;
+    padding: 28px 20px 40px !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+  }
+
+  .auth-right-panel > div {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
