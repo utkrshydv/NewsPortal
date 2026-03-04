@@ -1,0 +1,18 @@
+# Node
+node_modules/
+dist/
+build/
+
+# Env files
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# ML models (if heavy)
+*.pkl
+
+# OS
+.DS_Store

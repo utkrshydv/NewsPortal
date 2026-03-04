@@ -1,0 +1,118 @@
+miniProject3/
+├── backend
+│   ├── .env
+│   ├── config
+│   │   ├── corsOptions.js
+│   │   └── db.js
+│   ├── controllers
+│   │   ├── authController.js
+│   │   ├── historyController.js
+│   │   ├── newsController.js
+│   │   ├── recommendationController.js
+│   │   ├── userController.js
+│   │   └── verifyController.js
+│   ├── data
+│   │   └── newsData.js
+│   ├── middleware
+│   │   └── authMiddleware.js
+│   ├── models
+│   │   ├── Article.js
+│   │   ├── History.js
+│   │   ├── Interaction.js
+│   │   └── User.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes
+│   │   ├── authRoutes.js
+│   │   ├── historyRoutes.js
+│   │   ├── newsRoutes.js
+│   │   ├── recommendationRoutes.js
+│   │   ├── userRoutes.js
+│   │   └── verifyRoutes.js
+│   ├── seed.js
+│   └── server.js
+├── frontend
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── india-states.json
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── assets
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── Header.jsx
+│   │   │   ├── IndiaMap.jsx
+│   │   │   ├── NewsCard.jsx
+│   │   │   ├── OnboardingModal.jsx
+│   │   │   ├── TrendingSection.jsx
+│   │   │   ├── WeatherWidget.jsx
+│   │   │   ├── layout
+│   │   │   └── news
+│   │   ├── context
+│   │   │   └── AuthContext.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   ├── pages
+│   │   │   ├── BookmarksPage.jsx
+│   │   │   ├── HistoryPage.jsx
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── NewsDetailPage.jsx
+│   │   │   ├── ProfilePage.jsx
+│   │   │   ├── RegionalNewsPage.jsx
+│   │   │   ├── RegisterPage.jsx
+│   │   │   └── VerifyNewsPage.jsx
+│   │   └── services
+│   │       ├── api.js
+│   │       ├── authService.js
+│   │       └── userService.js
+│   └── vite.config.js
+├── generate_tree.py
+├── liar_ml_models
+│   ├── liar_tfidf.pkl
+│   ├── logistic_liar.pkl
+│   ├── naive_bayes_liar.pkl
+│   ├── randomforest_liar.pkl
+│   ├── sgd_liar.pkl
+│   ├── svm_liar.pkl
+│   └── xgboost_liar.pkl
+├── ml_models
+│   ├── Fake.csv
+│   ├── True.csv
+│   ├── WELFake_Dataset.csv
+│   ├── config.json
+│   ├── light_gbm_model.pkl
+│   ├── logistic_regression_model.pkl
+│   ├── model.safetensors
+│   ├── random_forest_model.pkl
+│   ├── special_tokens_map.json
+│   ├── tokenizer.json
+│   ├── tokenizer_config.json
+│   ├── vectorizer.pkl
+│   ├── vocab.txt
+│   └── xgboost_model.pkl
+├── ml_service
+│   ├── .env
+│   ├── app
+│   │   └── main.py
+│   └── requirements.txt
+├── new_models
+│   ├── lightgbm.pkl
+│   ├── logistic.pkl
+│   ├── naive_bayes.pkl
+│   ├── randomforest.pkl
+│   ├── sgd.pkl
+│   ├── svm.pkl
+│   ├── tfidf.pkl
+│   └── xgboost.pkl
+├── package-lock.json
+├── package.json
+├── start_all.bat
+└── start_all.sh
