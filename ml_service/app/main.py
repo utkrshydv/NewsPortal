@@ -12,6 +12,10 @@ load_dotenv()
 
 app = FastAPI(title="Fake News Detection API - Multi-Model")
 
+@app.get("/")
+def health():
+    return {"status": "ML service running"}
+
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 groq_client = None
 if GROQ_API_KEY:
