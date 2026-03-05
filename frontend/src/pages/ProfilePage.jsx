@@ -155,7 +155,7 @@ const ProfilePage = () => {
   if (!user) return <div style={{ padding: '2rem', textAlign: 'center' }}>Please log in to view your profile.</div>;
 
   return (
-    <div className="profile-dashboard-shell" style={{ display: 'flex', background: 'var(--bg-main)' }}>
+    <div className="profile-dashboard-shell" style={{ display: 'flex', background: 'var(--bg-main)', height: 'calc(100vh - 120px)' }}>
       
       {/* FIXED SIDEBAR (LEFT) */}
       <div className="profile-sidebar" style={{ 
