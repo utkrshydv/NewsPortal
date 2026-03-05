@@ -3,6 +3,47 @@ const googleTrends = require('google-trends-api');
 const newsData = require('../data/newsData');
 const Article = require('../models/Article');
 
+const parseRelativeDate = (dateStr) => {
+  if (!dateStr) return new Date().toISOString().split('T')[0];
+
+  const now = new Date();
+  const lowerStr = String(dateStr).toLowerCase();
+
+  if (lowerStr.includes('hour') || lowerStr.includes('minute') || lowerStr.includes('second')) {
+    return now.toISOString().split('T')[0];
+  } else if (lowerStr.includes('day')) {
+    const match = lowerStr.match(/(\d+)/);
+    const days = match ? parseInt(match[1]) : 1;
+    now.setDate(now.getDate() - days);
+    return now.toISOString().split('T')[0];
+  } else if (lowerStr.includes('week')) {
+    const match = lowerStr.match(/(\d+)/);
+    const weeks = match ? parseInt(match[1]) : 1;
+    now.setDate(now.getDate() - (weeks * 7));
+    return now.toISOString().split('T')[0];
+  } else if (lowerStr.includes('month')) {
+    const match = lowerStr.match(/(\d+)/);
+    const months = match ? parseInt(match[1]) : 1;
+    now.setMonth(now.getMonth() - months);
+    return now.toISOString().split('T')[0];
+  } else if (lowerStr.includes('year')) {
+    const match = lowerStr.match(/(\d+)/);
+    const years = match ? parseInt(match[1]) : 1;
+    now.setFullYear(now.getFullYear() - years);
+    return now.toISOString().split('T')[0];
+  } else if (lowerStr.includes('yesterday')) {
+    now.setDate(now.getDate() - 1);
+    return now.toISOString().split('T')[0];
+  }
+
+  const parsed = new Date(dateStr);
+  if (!isNaN(parsed.getTime())) {
+    return parsed.toISOString().split('T')[0];
+  }
+
+  return now.toISOString().split('T')[0];
+};
+
 // @desc    Get all news articles
 // @route   GET /api/news
 // @access  Public
@@ -261,7 +302,7 @@ const getRegionalNews = async (req, res) => {
           content: article.snippet || 'No content available.',
           imageUrl: article.imageUrl || 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=2071&auto=format&fit=crop',
           sourceUrl: article.link || '',
-          date: new Date().toISOString().split('T')[0] // Serper dates are relative, using today's date
+          date: parseRelativeDate(article.date)
         };
       });
 
@@ -408,7 +449,7 @@ const searchNews = async (req, res) => {
           content: article.snippet || article.description || 'No content available.',
           imageUrl: article.imageUrl || article.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=2070&auto=format&fit=crop',
           sourceUrl: article.link || '',
-          date: new Date().toISOString().split('T')[0] // Force valid ISO date to prevent "Invalid Date" in frontend
+          date: parseRelativeDate(article.date)
         };
       });
 
