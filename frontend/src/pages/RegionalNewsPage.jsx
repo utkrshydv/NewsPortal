@@ -5,6 +5,7 @@ import api from "../services/api";
 import { MapPin, Loader2, AlertCircle, TrendingUp } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import userService from "../services/userService";
+import MobileBackButton from "../components/MobileBackButton";
 
 const RegionalNewsPage = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -121,6 +122,7 @@ const RegionalNewsPage = () => {
     }}>
       
       {/* IMMERSIVE HERO HEADER */}
+      <MobileBackButton label="Back" />
       <header className="animate-fade-in-up" style={{ textAlign: 'center', marginBottom: '1rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
           <div className="stat-badge">LIVE MONITOR</div>

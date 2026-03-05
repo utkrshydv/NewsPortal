@@ -4,6 +4,7 @@ import axios from 'axios';
 import api from '../services/api';
 import { History, Loader2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import MobileBackButton from '../components/MobileBackButton';
 
 const HistoryPage = () => {
   const { user } = useContext(AuthContext);
@@ -59,6 +60,7 @@ const HistoryPage = () => {
 
   return (
     <div className="history-container" style={{ padding: '2rem 0' }}>
+      <MobileBackButton label="Back" />
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
         <div style={{ background: 'var(--primary-color)', padding: '0.75rem', borderRadius: '0.75rem', color: 'white' }}>
           <History size={32} />

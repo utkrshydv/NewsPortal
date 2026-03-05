@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ShieldAlert, ShieldCheck, AlertTriangle, Activity, Loader2, Sparkles, BrainCircuit, BarChart3, PieChart as PieChartIcon, Globe, ExternalLink, AlertCircle, Info, X } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import '../index.css';
+import MobileBackButton from '../components/MobileBackButton';
 
 const VerifyNewsPage = () => {
   const [text, setText] = useState('');
@@ -216,6 +217,7 @@ const VerifyNewsPage = () => {
   return (
     <div className="verify-page" style={{ padding: '1.5rem 1rem', maxWidth: '1600px', margin: '0 auto' }}>
       {renderInfoModal()}
+      <MobileBackButton label="Back" />
 
       {/* LANDSCAPE MAIN INTERFACE WRAPPED IN A COMMAND CARD */}
       <div className="command-card" style={{ padding: '3rem', marginBottom: '5rem', position: 'relative', overflow: 'hidden' }}>

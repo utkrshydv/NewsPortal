@@ -5,6 +5,7 @@ import { Loader2, AlertCircle, Search } from 'lucide-react';
 import NewsCard from '../components/NewsCard';
 import { AuthContext } from '../context/AuthContext';
 import userService from '../services/userService';
+import MobileBackButton from '../components/MobileBackButton';
 
 // Helper hook to get query parameters
 function useQuery() {
@@ -99,6 +100,7 @@ const SearchPage = () => {
 
   return (
     <div className="container">
+      <MobileBackButton label="Back" />
       <div style={{ marginBottom: '2.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
         <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
           <Search size={32} color="var(--primary)" />

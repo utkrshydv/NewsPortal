@@ -3,6 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import userService from '../services/userService';
 import { User, Settings, Save, AlertCircle, BookOpen, TrendingUp, Flame, Image as ImageIcon, Trash2, Sparkles, Activity, Clock, Sun, Target, LayoutDashboard } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import MobileBackButton from '../components/MobileBackButton';
 
 const CATEGORIES = ['Technology', 'Sports', 'Politics', 'Entertainment', 'Science', 'Health', 'Business'];
 
@@ -170,7 +171,10 @@ const ProfilePage = () => {
       }}>
         
         {/* 1. Profile Header */}
-        <div style={{ padding: '3rem 2rem 2rem 2rem', display: 'flex', alignItems: 'center', gap: '1.5rem', textAlign: 'left' }}>
+        <div style={{ padding: '1.25rem 2rem 0 2rem' }}>
+          <MobileBackButton label="Back" />
+        </div>
+        <div style={{ padding: '1rem 2rem 2rem 2rem', display: 'flex', alignItems: 'center', gap: '1.5rem', textAlign: 'left' }}>
           <div style={{ position: 'relative', flexShrink: 0 }}>
             <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '3px solid white', boxShadow: '0 8px 16px -4px rgba(0,0,0,0.1)' }}>
               {user.avatar ? (

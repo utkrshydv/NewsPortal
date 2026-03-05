@@ -4,6 +4,7 @@ import userService from '../services/userService';
 import NewsCard from '../components/NewsCard';
 import { Bookmark, Loader2, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import MobileBackButton from '../components/MobileBackButton';
 
 const BookmarksPage = () => {
   const { user } = useContext(AuthContext);
@@ -56,6 +57,7 @@ const BookmarksPage = () => {
 
   return (
     <div className="bookmarks-container" style={{ padding: '2rem 0' }}>
+      <MobileBackButton label="Back" />
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
         <div style={{ background: 'var(--primary-color)', padding: '0.75rem', borderRadius: '0.75rem', color: 'white' }}>
           <Bookmark size={32} />

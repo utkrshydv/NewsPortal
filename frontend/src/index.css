@@ -1595,3 +1595,33 @@ a {
     font-size: 1.35rem !important;
   }
 }
+
+/* ── Mobile Back Button ───────────────────────────────────── */
+/* Hidden on desktop, shown only on mobile */
+.mobile-back-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    margin-bottom: 1.25rem;
+    background: var(--card-bg-hover);
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .mobile-back-btn:active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+}
