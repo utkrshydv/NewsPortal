@@ -127,22 +127,22 @@ const WeatherWidget = () => {
 
       {/* Dropdown */}
       {showDropdown && (
-        <div style={{
+        <div className="weather-dropdown" style={{
           position: 'absolute',
           top: 'calc(100% + 0.5rem)',
           right: 0,
-          width: '320px',
-          background: 'var(--bg-color)', /* Made fully opaque */
+          width: '300px',
+          background: 'var(--bg-color)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
           boxShadow: 'var(--shadow-xl)',
-          padding: '1.25rem',
-          zIndex: 1000,
+          padding: '1rem',
+          zIndex: 2000,
           animation: 'fadeIn 0.2s ease-out',
           color: 'var(--text-main)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1.25rem'
+          gap: '1rem'
         }}>
           {/* Header row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

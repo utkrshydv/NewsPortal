@@ -154,7 +154,7 @@ const ProfilePage = () => {
   if (!user) return <div style={{ padding: '2rem', textAlign: 'center' }}>Please log in to view your profile.</div>;
 
   return (
-    <div className="profile-dashboard-shell" style={{ display: 'flex', height: 'calc(100vh - 84px)', background: 'var(--bg-main)', overflow: 'hidden' }}>
+    <div className="profile-dashboard-shell" style={{ display: 'flex', background: 'var(--bg-main)' }}>
       
       {/* FIXED SIDEBAR (LEFT) */}
       <div className="profile-sidebar" style={{ 
@@ -163,7 +163,7 @@ const ProfilePage = () => {
         background: 'rgba(255, 255, 255, 0.01)',
         display: 'flex', 
         flexDirection: 'column',
-        height: '100%',
+        maxHeight: '100vh',
         overflowY: 'auto',
         scrollbarWidth: 'none',
         msOverflowStyle: 'none'
@@ -263,7 +263,6 @@ const ProfilePage = () => {
       {/* DASHBOARD WORKSPACE (RIGHT) */}
       <div className="profile-workspace" style={{ 
         flex: '1', 
-        height: 'calc(100vh - 84px)', 
         overflowY: 'auto', 
         padding: '2.5rem',
         display: 'flex',
@@ -273,11 +272,11 @@ const ProfilePage = () => {
         
         {/* Growth Activity */}
         <section>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3rem' }}>
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: 0, fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.05em' }}>
+          <div className="profile-section-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3rem' }}>
+            <h2 className="profile-section-title" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: 0, fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.05em' }}>
               <Target size={40} color="var(--primary-color)" /> Reading Growth History
             </h2>
-            <div style={{ display: 'flex', background: 'rgba(0,0,0,0.04)', padding: '0.4rem', borderRadius: '1.25rem' }}>
+            <div style={{ display: 'flex', background: 'rgba(0,0,0,0.04)', padding: '0.4rem', borderRadius: '1.25rem', flexShrink: 0 }}>
               {[7, 14, 30].map(days => (
                 <button
                   key={days}
@@ -301,7 +300,7 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <div style={{ height: '420px', width: '100%', opacity: isLoadingGrowth ? 0.5 : 1 }}>
+          <div className="profile-chart-container" style={{ height: '420px', width: '100%', opacity: isLoadingGrowth ? 0.5 : 1 }}>
             {growthData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={growthData} margin={{ top: 10, right: 10, left: -20, bottom: 40 }}>
@@ -335,8 +334,8 @@ const ProfilePage = () => {
 
         {/* Narrative Discoveries */}
         <section>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: 0, fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <h2 className="profile-section-title" style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: 0, fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)' }}>
               <Sparkles size={36} color="#f59e0b" /> Narrative Discoveries
             </h2>
             {message && <span style={{ color: '#166534', fontSize: '1rem', fontWeight: 800, background: '#dcfce7', padding: '0.4rem 1rem', borderRadius: '1rem' }}>{message}</span>}
