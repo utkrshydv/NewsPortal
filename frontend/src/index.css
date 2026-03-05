@@ -1445,3 +1445,153 @@ a {
     height: 240px !important;
   }
 }
+
+/* ── Mobile Performance Optimizations ─────────────────────── */
+/*
+  backdrop-filter: blur() is the #1 cause of jank on mobile — it forces
+  a GPU compositing layer on EVERY scroll repaint. We disable it on
+  touch devices and fall back to a solid semi-transparent background,
+  which looks nearly identical but renders at 60 fps.
+*/
+@media (max-width: 768px), (hover: none) {
+
+  /* Kill expensive blurs that cause scroll jitter */
+  .header,
+  .glass-panel,
+  .glass-input,
+  .glass-button,
+  .filter-pill,
+  .news-card,
+  .mobile-search-bar {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Replace blur transparency with fully opaque/near-opaque backgrounds */
+  .header {
+    background-color: var(--bg-color) !important;
+  }
+
+  .glass-panel,
+  .news-card {
+    background: var(--card-bg-hover) !important;
+  }
+
+  .mobile-search-bar {
+    background: var(--bg-color) !important;
+  }
+
+  /* Enable native momentum (inertia) scrolling on iOS */
+  body,
+  .profile-workspace,
+  .profile-sidebar {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent hover transform flickers on tap (touch devices activate :hover
+     on tap-hold and then release it, causing a visible layout jump) */
+  .news-card:hover {
+    transform: none !important;
+  }
+
+  .filter-pill:hover {
+    transform: none !important;
+  }
+
+  .glass-button:hover {
+    transform: none !important;
+  }
+
+  /* GPU-composite hints for elements that animate */
+  .news-card,
+  .glass-button,
+  .filter-pill {
+    will-change: auto; /* let browser decide; avoids wasted layers on static content */
+  }
+}
+
+/* Respect user OS preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── History Page — Mobile Fix ───────────────────────────── */
+@media (max-width: 768px) {
+  .history-container,
+  .bookmarks-container {
+    padding: 1.25rem !important;
+  }
+
+  /* Article row: stack image above text on small screens */
+  .history-container .glass-panel[style*="display: flex"],
+  .history-container .glass-panel {
+    flex-direction: column !important;
+  }
+
+  .history-container .glass-panel img {
+    width: 100% !important;
+    height: 180px !important;
+    margin-right: 0 !important;
+    margin-bottom: 0.75rem !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+/* ── Bookmarks Page — Mobile Fix ─────────────────────────── */
+@media (max-width: 768px) {
+  /* Bookmarks uses the shared news-card-grid — force single column */
+  .news-card-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+  }
+}
+
+/* ── Verify (Fake News) Page — Mobile Fix ────────────────── */
+@media (max-width: 768px) {
+  /* Outer page padding */
+  .verify-page {
+    padding: 1rem 0.75rem !important;
+  }
+
+  /* Main command card padding */
+  .verify-page .command-card {
+    padding: 1.5rem 1.25rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  /* Collapse the two-column hero grid to a single column */
+  .verify-main-grid,
+  .verify-main-grid-mobile {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  /* Shrink the giant hero title */
+  .verify-hero-title {
+    font-size: 2.2rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Collapse the results stats grid */
+  .verify-results-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  /* Results header: stack vertically */
+  .verify-results-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .verify-results-header h2 {
+    font-size: 1.35rem !important;
+  }
+}

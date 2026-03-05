@@ -222,7 +222,7 @@ const VerifyNewsPage = () => {
         {/* Soft decorative glow inside the card */}
         <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '300px', background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)', opacity: 0.1, pointerEvents: 'none', filter: 'blur(60px)' }}></div>
         
-        <div className="verify-main-grid" style={{ 
+        <div className="verify-main-grid verify-main-grid-mobile" style={{ 
           display: 'grid', 
           gridTemplateColumns: '1fr 1.2fr', 
           gap: '3rem', 
@@ -376,7 +376,7 @@ const VerifyNewsPage = () => {
       {/* Analytics Dashboard Grid */}
       {results && consensus && (
         <div ref={resultsRef} style={{ animation: 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)', paddingTop: '2rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
+          <div className="verify-results-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '0.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <BarChart3 size={28} color="var(--primary-color)" />
               <h2 style={{ fontSize: '1.8rem', margin: 0 }}>Analysis Intelligence Report</h2>
