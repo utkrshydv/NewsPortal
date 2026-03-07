@@ -7,7 +7,7 @@ import MobileBackButton from '../components/MobileBackButton';
 
 const VerifyNewsPage = () => {
   const [text, setText] = useState('');
-  const [dataset, setDataset] = useState('welfake');
+  const [dataset, setDataset] = useState('liar');
   const [engineData, setEngineData] = useState({
     welfake: null,
     liar: null
@@ -276,17 +276,17 @@ const VerifyNewsPage = () => {
               <div className="glass-panel" style={{ padding: '0.4rem', borderRadius: '1.25rem', display: 'flex', gap: '0.4rem', background: 'rgba(255,255,255,0.03)', width: '100%' }}>
                 <button 
                   type="button"
-                  onClick={() => setDataset('welfake')}
-                  style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'welfake' ? 'var(--primary)' : 'transparent', color: dataset === 'welfake' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'welfake' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
-                >
-                  WELFake Engine
-                </button>
-                <button 
-                  type="button"
                   onClick={() => setDataset('liar')}
                   style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'liar' ? 'var(--primary)' : 'transparent', color: dataset === 'liar' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'liar' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
                 >
                   LIAR Engine
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setDataset('welfake')}
+                  style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'welfake' ? 'var(--primary)' : 'transparent', color: dataset === 'welfake' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'welfake' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
+                >
+                  WELFake Engine
                 </button>
               </div>
             </div>
@@ -494,6 +494,21 @@ const VerifyNewsPage = () => {
                  <Globe size={22} color="var(--primary-color)" /> Real-Time Web Verification
               </h3>
               
+              {/* Professional Fact-Check Badge */}
+              {webVerification.fact_check?.found && (
+                <div style={{ marginBottom: '1.5rem', padding: '1.25rem', background: webVerification.fact_check.fake_score >= 0.5 ? 'rgba(239,68,68,0.08)' : 'rgba(34,197,94,0.08)', border: `1px solid ${webVerification.fact_check.fake_score >= 0.5 ? 'rgba(239,68,68,0.3)' : 'rgba(34,197,94,0.3)'}`, borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ fontSize: '2rem' }}>{webVerification.fact_check.fake_score >= 0.5 ? '🚨' : '✅'}</div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: '1rem', color: webVerification.fact_check.fake_score >= 0.5 ? '#b91c1c' : '#15803d', marginBottom: '0.25rem' }}>
+                      Professionally Fact-Checked
+                    </div>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                      <strong>{webVerification.fact_check.publisher}</strong> rated this claim as: <strong style={{ color: 'var(--text-color)' }}>"{webVerification.fact_check.label}"</strong>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'center' }}>
                 <div style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                    <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Credibility Score</div>

@@ -11,8 +11,9 @@ const verifyNews = async (req, res) => {
       return res.status(400).json({ message: 'News text is required.' });
     }
 
-    // Forward the request to the deployed Python ML Microservice
-    const mlResponse = await axios.post('https://utkrshydv-newsportal.hf.space/predict', {
+    // Forward the request to the deployed Python ML Microservice (Testing Local Version)
+    const mlServiceUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000/predict';
+    const mlResponse = await axios.post(mlServiceUrl, {
       text: text,
       dataset: dataset
     });
