@@ -25,7 +25,7 @@ const verifyNews = async (req, res) => {
     console.error('Error forwarding to ML service:', error.message);
 
     if (error.code === 'ECONNREFUSED' || error.response?.status >= 500) {
-      return res.status(503).json({ message: 'ML Microservice is unreachable. Please try again later.' });
+      return res.status(503).json({ message: 'ML Microservice is loading. Please try again in a few seconds.' });
     }
 
     res.status(500).json({ message: 'An error occurred during verification.', error: error.message });

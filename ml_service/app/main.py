@@ -692,55 +692,39 @@ Article:
         fact_claim = sentences[0] if sentences else request.text[:120]
 
     fact_check_result = check_fact_check_api(fact_claim)
-    
-    if fact_check_result["found"]:
-        # Professional fact-check found — this is our authoritative answer.
-        final_score = fact_check_result["fake_score"]
-        consensus_label = "Fake" if final_score >= 0.5 else "Real"
-        web_adjustment = final_score - ml_score
-        web = {"score": int((1.0 - final_score) * 100),
-               "sources": [],
-               "fact_check": fact_check_result}  # Pass fact-check data to UI
-        analysis = generate_reasoning(request.text, consensus_label)
-        return {
-            "results": results,
-            "web_verification": web,
-            "analysis": analysis,
-            "weighted_consensus": {
-                "prediction": consensus_label,
-                "ml_score": ml_score,
-                "web_adjustment": web_adjustment,
-                "final_score": final_score,
-                "weights_used": {k: v for k, v in model_weights.items() if k in results or k == 'web_search'}
-            }
-        }
-    
+
     # -------------------------------------------------------
-    # TIER 2: NLI Web Search (when no professional fact-check)
+    # TIER 2: NLI Web Search — always run, always shown in UI
+    # The displayed web credibility score always comes from NLI.
     # -------------------------------------------------------
     web = verify_with_web(request.text)
     web_raw_score = web.get("score", 50)  # 10=Contradict, 50=Neutral, 90=Support
-    
-    # Convert NLI web score to a 0.0-1.0 "fake probability" score:
-    #   - NLI=SUPPORT (score=90) -> web_fake_score = 0.05 (very likely Real)
-    #   - NLI=UNRELATED (score=50) -> web_fake_score = 0.5 (neutral, don't know)
-    #   - NLI=CONTRADICT (score=10) -> web_fake_score = 0.95 (very likely Fake)
+
+    # Convert NLI web score to a 0.0-1.0 "fake probability" score
     web_fake_score = 1.0 - (web_raw_score / 100.0)
-    
+
     # Blending strategy: weighted average with web as the dominant signal
-    # When web is decisive: 70% web, 30% ML
-    # When web is neutral (score=50, i.e., UNRELATED): fall back entirely to ML
     neutrality = abs(web_fake_score - 0.5) * 2  # 0.0=neutral, 1.0=decisive
-    web_weight = 0.7 * neutrality  # web only gets weight when it has a clear signal
+    web_weight = 0.7 * neutrality
     ml_weight = 1.0 - web_weight
-    
-    final_score = max(0.0, min(1.0, (web_weight * web_fake_score) + (ml_weight * ml_score)))
-    
+
+    nli_final_score = max(0.0, min(1.0, (web_weight * web_fake_score) + (ml_weight * ml_score)))
+
+    # -------------------------------------------------------
+    # TIER 1: Fact Check override (only overrides final_score,
+    # NOT the displayed web credibility — that always = NLI score)
+    # -------------------------------------------------------
+    if fact_check_result["found"]:
+        final_score = fact_check_result["fake_score"]
+        web["fact_check"] = fact_check_result  # Attach badge data for UI
+    else:
+        final_score = nli_final_score
+
     # For reporting the "adjustment" value for the UI
     web_adjustment = final_score - ml_score
-    
+
     consensus_label = "Fake" if final_score >= 0.5 else "Real"
-    
+
     analysis = generate_reasoning(request.text, consensus_label)
 
     return {
