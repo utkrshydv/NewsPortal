@@ -622,6 +622,109 @@ const VerifyNewsPage = () => {
             </div>
           )}
 
+          {/* Per-Model Breakdown Cards */}
+          {results && (() => {
+            const modelMeta = {
+              distilbert:   { name: 'DistilBERT', desc: 'A state-of-the-art transformer-based language model that understands context and nuance in text.', advanced: true },
+              lightgbm:     { name: 'LightGBM',   desc: 'A fast, gradient-boosting framework using tree-based learning algorithms.' },
+              xgboost:      { name: 'XGBoost',     desc: 'An optimized gradient boosting library designed for high performance.' },
+              randomforest: { name: 'Random Forest', desc: 'An ensemble of decision trees trained on random subsets of data.' },
+              logistic:     { name: 'Logistic Regression', desc: 'A simple linear model for binary classification problems.' },
+              svm:          { name: 'SVM',         desc: 'Support Vector Machine that finds the optimal hyperplane to separate classes.' },
+              sgd:          { name: 'SGD',         desc: 'Stochastic Gradient Descent — fast linear classifier suited for large text data.' },
+              naive_bayes:  { name: 'Naive Bayes', desc: 'A probabilistic classifier based on Bayes\' theorem with strong independence assumptions.' },
+            };
+
+            const fakeIndicators = ['Sensationalism', 'Exaggeration', 'Emotional language', 'Lack of sources'];
+            const realIndicators = ['Factual language', 'Credible sources', 'Objective tone', 'Verified claims'];
+
+            const modelEntries = Object.entries(results).filter(([k]) => k !== 'naive_bayes');
+
+            return (
+              <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', marginBottom: '3rem' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '1.75rem', fontWeight: 700, color: 'var(--text-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <BrainCircuit size={22} color="var(--primary-color)" /> Per-Model Breakdown
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {modelEntries.map(([key, data]) => {
+                    const meta = modelMeta[key] || { name: key.charAt(0).toUpperCase() + key.slice(1), desc: 'A machine learning classifier.' };
+                    const isFake = data.prediction.toLowerCase() === 'fake';
+                    const indicators = isFake ? fakeIndicators : realIndicators;
+                    const highConf = data.confidence >= 85;
+
+                    return (
+                      <div key={key} style={{
+                        padding: '1.25rem 1.5rem',
+                        borderRadius: '1.25rem',
+                        background: meta.advanced
+                          ? 'linear-gradient(135deg, rgba(92,56,235,0.06) 0%, rgba(139,92,246,0.04) 100%)'
+                          : 'var(--background-color)',
+                        border: meta.advanced
+                          ? '1px solid rgba(92,56,235,0.25)'
+                          : '1px solid var(--border-color)',
+                      }}>
+                        {/* Header row */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: meta.advanced ? 'var(--primary-color)' : 'var(--text-color)' }}>
+                              {meta.name}
+                            </span>
+                            {meta.advanced && (
+                              <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'var(--primary)', color: 'white', letterSpacing: '0.04em' }}>
+                                Advanced NLP
+                              </span>
+                            )}
+                          </div>
+                          <span style={{
+                            fontSize: '0.85rem', fontWeight: 800, padding: '0.3rem 0.8rem', borderRadius: '999px',
+                            background: isFake ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
+                            color: isFake ? '#ef4444' : '#22c55e',
+                            border: `1px solid ${isFake ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'}`,
+                          }}>
+                            {data.prediction.toUpperCase()} ({data.confidence}%)
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', margin: '0 0 0.85rem 0', lineHeight: 1.5 }}>
+                          {meta.desc}
+                        </p>
+
+                        {/* Analysis line */}
+                        <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.9rem', lineHeight: 1.5 }}>
+                          <span style={{ fontWeight: 700, color: 'var(--text-color)' }}>
+                            {meta.advanced ? 'Deep Analysis: ' : 'Analysis: '}
+                          </span>
+                          <span style={{ color: isFake ? '#ef4444' : '#22c55e' }}>
+                            {meta.advanced
+                              ? `Using contextual understanding of language, this model identified ${isFake ? 'patterns of misinformation and detected untrustworthy content' : 'characteristics consistent with factual, credible reporting'}.`
+                              : `This model identified patterns typically found in ${isFake ? 'fabricated' : 'credible'} news sources${highConf ? ' with high certainty' : ''}.`}
+                          </span>
+                        </p>
+
+                        {/* Key indicator tags */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--text-muted)', marginRight: '0.25rem' }}>Key indicators:</span>
+                          {indicators.map(tag => (
+                            <span key={tag} style={{
+                              fontSize: '0.8rem', fontWeight: 600,
+                              padding: '0.2rem 0.65rem', borderRadius: '999px',
+                              background: isFake ? 'rgba(239,68,68,0.08)' : 'rgba(34,197,94,0.08)',
+                              color: isFake ? '#ef4444' : '#22c55e',
+                              border: `1px solid ${isFake ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`,
+                            }}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Bar Chart - Confidence Breakdown */}
           <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', marginBottom: '3rem' }}>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '2rem', fontWeight: 700, color: 'var(--text-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
