@@ -76,6 +76,12 @@ const VerifyNewsPage = () => {
       return;
     }
 
+    const wordCount = text.trim().split(/\s+/).length;
+    if (wordCount < 10) {
+      setError('Text is too short for accurate analysis. Please provide at least 10 words of context.');
+      return;
+    }
+
     setLoading(true);
     setError('');
     // Clear both engine results
