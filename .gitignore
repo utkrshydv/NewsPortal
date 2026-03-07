@@ -15,6 +15,6 @@ __pycache__/
 *.pkl
 new_models/
 liar_ml_models/
-
+isot_models/
 # OS
 .DS_Store
