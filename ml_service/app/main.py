@@ -8,6 +8,15 @@ import numpy as np
 from openai import OpenAI
 from dotenv import load_dotenv
 
+# DistilBERT / HuggingFace Transformers
+try:
+    import torch
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    print("WARNING: torch/transformers not installed. DistilBERT will be unavailable.")
+
 load_dotenv()
 
 app = FastAPI(title="Fake News Detection API - Multi-Model")
@@ -40,7 +49,20 @@ MODEL_FILES = [
     "liar_ml_models/randomforest_liar.pkl",
     "liar_ml_models/sgd_liar.pkl",
     "liar_ml_models/svm_liar.pkl",
-    "liar_ml_models/xgboost_liar.pkl"
+    "liar_ml_models/xgboost_liar.pkl",
+
+    # ISOT Engine models
+    "isot_models/vectorizer.pkl",
+    "isot_models/light_gbm_model.pkl",
+    "isot_models/logistic_regression_model.pkl",
+    "isot_models/random_forest_model.pkl",
+    "isot_models/xgboost_model.pkl",
+    "isot_models/config.json",
+    "isot_models/model.safetensors",
+    "isot_models/tokenizer.json",
+    "isot_models/tokenizer_config.json",
+    "isot_models/special_tokens_map.json",
+    "isot_models/vocab.txt",
 ]
 
 
@@ -354,16 +376,23 @@ MODELS_DIR = os.path.join(BASE_DIR, "new_models")
 
 LIAR_MODELS_DIR = os.path.join(BASE_DIR, "liar_ml_models")
 
+ISOT_MODELS_DIR = os.path.join(BASE_DIR, "isot_models")
 
 models = {
     'welfake': {},
-    'liar': {}
+    'liar': {},
+    'isot': {}
 }
 
 vectorizers = {
     'welfake': None,
-    'liar': None
+    'liar': None,
+    'isot': None
 }
+
+# DistilBERT globals (loaded at startup if torch is available)
+isot_distilbert_model = None
+isot_distilbert_tokenizer = None
 
 
 # ================================
@@ -379,6 +408,15 @@ model_weights = {
     'sgd': 7.0,
     'web_search': 20.0,
     'naive_bayes': 0.0
+}
+
+# ISOT-specific weights — DistilBERT gets the highest weight
+isot_model_weights = {
+    'distilbert': 40.0,
+    'xgboost': 20.0,
+    'lightgbm': 20.0,
+    'randomforest': 15.0,
+    'logistic': 8.0,
 }
 
 
@@ -460,6 +498,78 @@ def load_models():
 
             print(e)
 
+    # ================================
+    # LOAD ISOT MODELS
+    # ================================
+    print("Loading ISOT models...")
+
+    isot_sklearn_models = [
+        ('lightgbm', 'light_gbm_model.pkl'),
+        ('logistic', 'logistic_regression_model.pkl'),
+        ('randomforest', 'random_forest_model.pkl'),
+        ('xgboost', 'xgboost_model.pkl'),
+    ]
+
+    try:
+        vectorizers['isot'] = joblib.load(os.path.join(ISOT_MODELS_DIR, 'vectorizer.pkl'))
+        print("ISOT TF-IDF vectorizer loaded")
+    except Exception as e:
+        print(f"Failed loading ISOT vectorizer: {e}")
+
+    for model_key, filename in isot_sklearn_models:
+        try:
+            models['isot'][model_key] = joblib.load(os.path.join(ISOT_MODELS_DIR, filename))
+            print(f"ISOT {model_key} loaded")
+        except Exception as e:
+            print(f"Failed loading ISOT {model_key}: {e}")
+
+    # Load DistilBERT
+    global isot_distilbert_model, isot_distilbert_tokenizer
+    if TORCH_AVAILABLE:
+        try:
+            isot_distilbert_tokenizer = AutoTokenizer.from_pretrained(ISOT_MODELS_DIR)
+            isot_distilbert_model = AutoModelForSequenceClassification.from_pretrained(ISOT_MODELS_DIR)
+            isot_distilbert_model.eval()
+            print("ISOT DistilBERT loaded successfully")
+        except Exception as e:
+            print(f"Failed loading ISOT DistilBERT: {e}")
+    else:
+        print("DistilBERT skipped (torch/transformers not installed)")
+
+
+# ================================
+# DISTILBERT PREDICT HELPER
+# ================================
+
+def predict_with_distilbert(text: str):
+    """
+    Runs inference on the ISOT DistilBERT model.
+    Returns: (label: str, confidence: int) or None if unavailable.
+    label is 'Real' (label=1) or 'Fake' (label=0).
+    """
+    if not TORCH_AVAILABLE or isot_distilbert_model is None or isot_distilbert_tokenizer is None:
+        return None
+    try:
+        inputs = isot_distilbert_tokenizer(
+            text,
+            return_tensors="pt",
+            truncation=True,
+            max_length=512,
+            padding=True
+        )
+        with torch.no_grad():
+            outputs = isot_distilbert_model(**inputs)
+        probs = torch.softmax(outputs.logits, dim=-1)[0].tolist()
+        # Label 0 = FAKE, Label 1 = REAL (standard for most fine-tuned news classifiers)
+        fake_prob = probs[0]
+        real_prob = probs[1]
+        label = "Real" if real_prob > fake_prob else "Fake"
+        confidence = int(max(fake_prob, real_prob) * 100)
+        return label, confidence
+    except Exception as e:
+        print(f"DistilBERT inference error: {e}")
+        return None
+
 
 # ================================
 # REQUEST SCHEMA
@@ -493,10 +603,24 @@ def predict_news(request: PredictRequest):
     ml_fake_weight = 0
     total_ml_weight = 0
 
+    # Determine which weight table to use
+    active_weights = isot_model_weights if dataset == 'isot' else model_weights
+
+    # Label convention differs per dataset:
+    #   WELFake: 1 = Fake, 0 = Real
+    #   LIAR:    1 = Real, 0 = Fake  (model trained on binary True/False)
+    #   ISOT:    1 = Real, 0 = Fake  (same as LIAR)
+    label_map = {
+        'welfake': {1: 'Fake', 0: 'Real'},
+        'liar':    {1: 'Real', 0: 'Fake'},
+        'isot':    {1: 'Real', 0: 'Fake'},
+    }
+    current_label_map = label_map.get(dataset, {1: 'Real', 0: 'Fake'})
+
     for name, model in models[dataset].items():
         # Get prediction and probability if possible
         pred = model.predict(X)[0]
-        label = "Real" if pred == 1 else "Fake"
+        label = current_label_map.get(int(pred), 'Fake')
         
         confidence = 100
         if hasattr(model, "predict_proba"):
@@ -518,11 +642,23 @@ def predict_news(request: PredictRequest):
         }
 
         # Weighted calculation for ML consensus
-        weight = model_weights.get(name, 0)
+        weight = active_weights.get(name, 0)
         if weight > 0:
             total_ml_weight += weight
             if label == "Fake":
                 ml_fake_weight += weight
+
+    # For ISOT engine: also run DistilBERT inference and include it in the ensemble
+    if dataset == 'isot':
+        db_result = predict_with_distilbert(request.text)
+        if db_result:
+            db_label, db_confidence = db_result
+            results['distilbert'] = {"prediction": db_label, "confidence": db_confidence}
+            weight = active_weights.get('distilbert', 0)
+            if weight > 0:
+                total_ml_weight += weight
+                if db_label == "Fake":
+                    ml_fake_weight += weight
 
     # Calculate base ML score (always 0.0=Real to 1.0=Fake)
     ml_score = ml_fake_weight / total_ml_weight if total_ml_weight > 0 else 0.5

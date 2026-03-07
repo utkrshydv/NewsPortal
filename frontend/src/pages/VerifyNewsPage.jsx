@@ -10,7 +10,8 @@ const VerifyNewsPage = () => {
   const [dataset, setDataset] = useState('liar');
   const [engineData, setEngineData] = useState({
     welfake: null,
-    liar: null
+    liar: null,
+    isot: null
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -85,7 +86,7 @@ const VerifyNewsPage = () => {
     setLoading(true);
     setError('');
     // Clear both engine results
-    setEngineData({ welfake: null, liar: null });
+    setEngineData({ welfake: null, liar: null, isot: null });
 
     try {
       const fetchEngine = async (engineDataset) => {
@@ -103,14 +104,16 @@ const VerifyNewsPage = () => {
       };
 
       // Execute both engines in parallel
-      const [welfakeData, liarData] = await Promise.all([
+      const [welfakeData, liarData, isotData] = await Promise.all([
         fetchEngine('welfake'),
-        fetchEngine('liar')
+        fetchEngine('liar'),
+        fetchEngine('isot')
       ]);
 
       setEngineData({
         welfake: welfakeData,
-        liar: liarData
+        liar: liarData,
+        isot: isotData
       });
 
     } catch (err) {
@@ -283,6 +286,13 @@ const VerifyNewsPage = () => {
                 </button>
                 <button 
                   type="button"
+                  onClick={() => setDataset('isot')}
+                  style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'isot' ? 'var(--primary)' : 'transparent', color: dataset === 'isot' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'isot' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
+                >
+                  ISOT Engine
+                </button>
+                <button 
+                  type="button"
                   onClick={() => setDataset('welfake')}
                   style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'welfake' ? 'var(--primary)' : 'transparent', color: dataset === 'welfake' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'welfake' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
                 >
@@ -380,6 +390,46 @@ const VerifyNewsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* === LOADING STATE CARD === */}
+      {loading && (
+        <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '3rem 2rem', marginBottom: '2rem', textAlign: 'center', animation: 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
+          
+          {/* Animated neural nodes */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem' }}>
+            {['LIAR', 'ISOT', 'WELFake', 'Web NLI', 'Fact Check'].map((label, i) => (
+              <div key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{
+                  width: '52px', height: '52px', borderRadius: '50%',
+                  background: 'rgba(92, 56, 235, 0.08)',
+                  border: '2px solid var(--primary)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  animation: `neuralPulse 1.6s ease-in-out ${i * 0.28}s infinite`,
+                  boxShadow: '0 0 20px rgba(92, 56, 235, 0.2)'
+                }}>
+                  <BrainCircuit size={22} color="var(--primary)" />
+                </div>
+                <span style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Connecting line with moving dots */}
+          <div style={{ position: 'relative', height: '4px', background: 'rgba(92, 56, 235, 0.1)', borderRadius: '999px', marginBottom: '2.5rem', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '40%', background: 'linear-gradient(90deg, transparent, var(--primary), transparent)', borderRadius: '999px', animation: 'scanLine 1.8s ease-in-out infinite' }} />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-color)', fontWeight: 700, fontSize: '1.15rem' }}>
+              <Loader2 size={20} className="spin" color="var(--primary)" />
+              Running Neural Ensemble Analysis…
+            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>
+              All 3 engines + real-time web verification are running in parallel. This typically takes 5–15 seconds.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Analytics Dashboard Grid */}
       {results && consensus && (
@@ -621,6 +671,14 @@ const VerifyNewsPage = () => {
         @keyframes slideUp {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes neuralPulse {
+          0%, 100% { opacity: 0.5; transform: scale(1); box-shadow: 0 0 10px rgba(92, 56, 235, 0.1); }
+          50% { opacity: 1; transform: scale(1.12); box-shadow: 0 0 28px rgba(92, 56, 235, 0.45); }
+        }
+        @keyframes scanLine {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(350%); }
         }
       `}} />
     </div>
