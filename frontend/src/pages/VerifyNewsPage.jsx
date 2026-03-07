@@ -16,12 +16,14 @@ const VerifyNewsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [sharedWebVerification, setSharedWebVerification] = useState(null);
   const resultsRef = useRef(null);
 
   // Derived Data (Must be before hooks that use them)
   const currentData = engineData[dataset];
   const results = currentData?.results;
-  const webVerification = currentData?.webVerification;
+  // webVerification is shared across all engines — use sharedWebVerification
+  const webVerification = sharedWebVerification;
   const weightedConsensus = currentData?.weightedConsensus;
   const analysis = currentData?.analysis;
 
@@ -85,8 +87,9 @@ const VerifyNewsPage = () => {
 
     setLoading(true);
     setError('');
-    // Clear both engine results
+    // Clear all engine results and shared web verification
     setEngineData({ welfake: null, liar: null, isot: null });
+    setSharedWebVerification(null);
 
     try {
       const fetchEngine = async (engineDataset) => {
@@ -115,6 +118,15 @@ const VerifyNewsPage = () => {
         liar: liarData,
         isot: isotData
       });
+
+      // Use the first non-null web_verification result as the shared one
+      // (all 3 search the same text, so the result should be identical)
+      const firstWebVerification =
+        welfakeData.webVerification ||
+        liarData.webVerification ||
+        isotData.webVerification ||
+        null;
+      setSharedWebVerification(firstWebVerification);
 
     } catch (err) {
       setError(
