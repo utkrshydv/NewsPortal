@@ -396,28 +396,47 @@ isot_distilbert_tokenizer = None
 
 
 # ================================
-# MODEL WEIGHTS
+# MODEL WEIGHTS (ML ensemble only — web is blended separately)
+# Weights are relative; they do NOT need to sum to 100.
+# naive_bayes intentionally set to 0 (poor calibration on these datasets).
 # ================================
 
-model_weights = {
-    'xgboost': 20.0,
-    'lightgbm': 20.0,
-    'randomforest': 15.0,
-    'svm': 10.0,
-    'logistic': 8.0,
-    'sgd': 7.0,
-    'web_search': 20.0,
-    'naive_bayes': 0.0
+# WELFake engine: 7 sklearn models (lightgbm, logistic, naive_bayes, randomforest, sgd, svm, xgboost)
+# Accuracy ranking on WELFake: XGBoost ≈ LightGBM > RandomForest > SVM > SGD > Logistic > NaiveBayes
+welfake_model_weights = {
+    'xgboost':      25.0,
+    'lightgbm':     25.0,
+    'randomforest': 20.0,
+    'svm':          15.0,
+    'sgd':          10.0,
+    'logistic':      5.0,
+    'naive_bayes':   0.0,   # Excluded — poor performance on this dataset
 }
 
-# ISOT-specific weights — DistilBERT gets the highest weight
-isot_model_weights = {
-    'distilbert': 40.0,
-    'xgboost': 20.0,
-    'lightgbm': 20.0,
-    'randomforest': 15.0,
-    'logistic': 8.0,
+# LIAR engine: 6 sklearn models (logistic, naive_bayes, randomforest, sgd, svm, xgboost)
+# LightGBM was NOT trained for LIAR, so it is excluded here.
+# Accuracy ranking on LIAR: XGBoost > RandomForest > SVM > SGD > Logistic > NaiveBayes
+liar_model_weights = {
+    'xgboost':      30.0,
+    'randomforest': 25.0,
+    'svm':          20.0,
+    'sgd':          15.0,
+    'logistic':     10.0,
+    'naive_bayes':   0.0,   # Excluded — poor performance on this dataset
 }
+
+# ISOT engine: 4 sklearn models + DistilBERT transformer
+# DistilBERT (fine-tuned on ISOT) is the dominant signal.
+isot_model_weights = {
+    'distilbert':   45.0,
+    'xgboost':      20.0,
+    'lightgbm':     18.0,
+    'randomforest': 12.0,
+    'logistic':      5.0,
+}
+
+# Alias used generically — will be replaced at runtime by the correct table
+model_weights = welfake_model_weights
 
 
 # ================================
@@ -603,8 +622,13 @@ def predict_news(request: PredictRequest):
     ml_fake_weight = 0
     total_ml_weight = 0
 
-    # Determine which weight table to use
-    active_weights = isot_model_weights if dataset == 'isot' else model_weights
+    # Determine which weight table to use per engine
+    if dataset == 'isot':
+        active_weights = isot_model_weights
+    elif dataset == 'liar':
+        active_weights = liar_model_weights
+    else:  # welfake (default)
+        active_weights = welfake_model_weights
 
     # Label convention differs per dataset:
     #   WELFake: 1 = Fake, 0 = Real
@@ -736,6 +760,6 @@ Article:
             "ml_score": ml_score,
             "web_adjustment": web_adjustment,
             "final_score": final_score,
-            "weights_used": {k: v for k, v in model_weights.items() if k in results or k == 'web_search'}
+            "weights_used": {k: v for k, v in active_weights.items() if k in results}
         }
     }
