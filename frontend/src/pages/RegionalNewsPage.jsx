@@ -19,8 +19,8 @@ const RegionalNewsPage = () => {
   const normalizeStateName = (osmState) => {
     if (!osmState) return null;
     const mapping = {
-      'Delhi': 'NCT of Delhi',
-      'National Capital Territory of Delhi': 'NCT of Delhi',
+      'Delhi': 'Delhi',
+      'National Capital Territory of Delhi': 'Delhi',
       'Arunachal Pradesh': 'Arunanchal Pradesh', // Match local typo
       'Dadra and Nagar Haveli and Daman and Diu': 'Dadara and Nagar Havelli',
       'Andaman and Nicobar Islands': 'Andaman and Nicobar',
