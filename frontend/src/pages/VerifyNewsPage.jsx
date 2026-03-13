@@ -16,6 +16,7 @@ const VerifyNewsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showOverviewModal, setShowOverviewModal] = useState(false);
   const [sharedWebVerification, setSharedWebVerification] = useState(null);
   const resultsRef = useRef(null);
 
@@ -193,6 +194,97 @@ const VerifyNewsPage = () => {
     return null;
   };
 
+  const renderOverviewModal = () => {
+    if (!showOverviewModal) return null;
+    const steps = [
+      {
+        icon: '✍️',
+        title: 'Step 1 — Paste Your Text',
+        desc: 'You enter a news article, headline, or any text claim into the input box. The system requires at least 10 words for a meaningful analysis.'
+      },
+      {
+        icon: '⚙️',
+        title: 'Step 2 — Choose an Intelligence Engine',
+        desc: 'Three engines are available, each trained on a different dataset. LIAR (political claims), ISOT (real vs. fake news corpus), and WELFake (large-scale fake news dataset). All three run in parallel so you can compare results.'
+      },
+      {
+        icon: '🧠',
+        title: 'Step 3 — 7 ML Models Analyze in Parallel',
+        desc: 'Each engine runs up to 7 machine learning models simultaneously: DistilBERT (advanced transformer NLP), LightGBM, XGBoost, Random Forest, Logistic Regression, SVM, and SGD. Each model independently votes Real or Fake with a confidence score.'
+      },
+      {
+        icon: '🌐',
+        title: 'Step 4 — Real-Time Web Verification',
+        desc: 'Simultaneously, the system performs a live web search to cross-reference the claim against trusted sources and fact-checkers. It computes a credibility score based on what reputable outlets say about the same topic.'
+      },
+      {
+        icon: '⚖️',
+        title: 'Step 5 — Weighted Consensus',
+        desc: 'Each model is assigned a performance-based weight. A weighted fake probability score is computed from all model votes, then adjusted up or down by the real-time web verification result.'
+      },
+      {
+        icon: '🏁',
+        title: 'Step 6 — Final Verdict',
+        desc: 'If the final combined score is ≥ 50%, the content is classified as FAKE. Below 50% = REAL. The AI Reasoning section then explains the key signals detected in the text.'
+      },
+    ];
+    return (
+      <div
+        style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100, padding: '1rem', backdropFilter: 'blur(6px)' }}
+        onClick={() => setShowOverviewModal(false)}
+      >
+        <div
+          className="glass-panel"
+          style={{ padding: '2.5rem', borderRadius: '2rem', width: '100%', maxWidth: '620px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 30px 60px -12px rgba(0,0,0,0.4)', position: 'relative' }}
+          onClick={e => e.stopPropagation()}
+        >
+          <button
+            onClick={() => setShowOverviewModal(false)}
+            style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
+            onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+          >
+            <X size={18} />
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '14px', background: 'rgba(92,56,235,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <BrainCircuit size={24} color="var(--primary)" />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)' }}>How It Works</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>AI-powered fake news detection pipeline</p>
+            </div>
+          </div>
+
+          <div style={{ height: '1px', background: 'var(--border-color)', margin: '1.5rem 0' }} />
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {steps.map((step, i) => (
+              <div
+                key={i}
+                style={{ display: 'flex', gap: '1rem', padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1.25rem', border: '1px solid var(--border-color)', alignItems: 'flex-start' }}
+              >
+                <div style={{ fontSize: '1.5rem', lineHeight: 1, flexShrink: 0, marginTop: '2px' }}>{step.icon}</div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)', marginBottom: '0.35rem' }}>{step.title}</div>
+                  <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{step.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', background: 'rgba(92,56,235,0.06)', borderRadius: '1rem', border: '1px solid rgba(92,56,235,0.15)', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+            <Info size={18} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--primary)' }} />
+            <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              After results appear, click <strong style={{ color: 'var(--text-main)' }}>"How is this calculated?"</strong> next to the report heading for a detailed breakdown of each model's weight in the final score.
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderInfoModal = () => {
     if (!showInfoModal || !weightedConsensus || !weightedConsensus.weights_used) return null;
     
@@ -237,6 +329,7 @@ const VerifyNewsPage = () => {
 
   return (
     <div className="verify-page" style={{ padding: '1.5rem 1rem', maxWidth: '1600px', margin: '0 auto' }}>
+      {renderOverviewModal()}
       {renderInfoModal()}
       <MobileBackButton label="Back" />
 
@@ -260,18 +353,36 @@ const VerifyNewsPage = () => {
               <BrainCircuit size={32} color="var(--primary)" />
             </div>
             
-            <h1 className="verify-hero-title" style={{ 
-              fontSize: '3.5rem', 
-              fontWeight: 800, 
-              letterSpacing: '-0.03em', 
-              marginBottom: '1.5rem', 
-              lineHeight: 1.1,
-              background: 'linear-gradient(to right, var(--primary), #8b5cf6)', 
-              WebkitBackgroundClip: 'text', 
-              WebkitTextFillColor: 'transparent' 
-            }}>
-              AI Core <br/>Analyzer
-            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+              <h1 className="verify-hero-title" style={{ 
+                fontSize: '3.5rem', 
+                fontWeight: 800, 
+                letterSpacing: '-0.03em', 
+                margin: 0, 
+                lineHeight: 1.1,
+                background: 'linear-gradient(to right, var(--primary), #8b5cf6)', 
+                WebkitBackgroundClip: 'text', 
+                WebkitTextFillColor: 'transparent' 
+              }}>
+                AI Core <br/>Analyzer
+              </h1>
+              <button
+                type="button"
+                onClick={() => setShowOverviewModal(true)}
+                title="How does this work?"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                  background: 'rgba(92,56,235,0.08)', border: '1.5px solid rgba(92,56,235,0.25)',
+                  color: 'var(--primary)', padding: '0.5rem 1rem', borderRadius: '999px',
+                  fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+                  transition: 'all 0.2s', whiteSpace: 'nowrap', alignSelf: 'flex-start', marginTop: '0.5rem'
+                }}
+                onMouseOver={e => { e.currentTarget.style.background = 'rgba(92,56,235,0.16)'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
+                onMouseOut={e => { e.currentTarget.style.background = 'rgba(92,56,235,0.08)'; e.currentTarget.style.borderColor = 'rgba(92,56,235,0.25)'; }}
+              >
+                <Info size={16} /> How It Works
+              </button>
+            </div>
             
             <p style={{ 
               color: 'var(--text-muted)', 
