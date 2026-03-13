@@ -234,50 +234,50 @@ const VerifyNewsPage = () => {
         onClick={() => setShowOverviewModal(false)}
       >
         <div
-          className="glass-panel"
-          style={{ padding: '2.5rem', borderRadius: '2rem', width: '100%', maxWidth: '620px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 30px 60px -12px rgba(0,0,0,0.4)', position: 'relative' }}
+          className="hide-scrollbar"
+          style={{ padding: '2.5rem', borderRadius: '2rem', width: '100%', maxWidth: '620px', maxHeight: '90vh', overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', boxShadow: '0 30px 60px -12px rgba(0,0,0,0.35)', position: 'relative', background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.6)' }}
           onClick={e => e.stopPropagation()}
         >
           <button
             onClick={() => setShowOverviewModal(false)}
-            style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', cursor: 'pointer', color: 'var(--text-muted)', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
-            onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-            onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+            style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.1)', cursor: 'pointer', color: '#555', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}
+            onMouseOver={e => e.currentTarget.style.background = 'rgba(0,0,0,0.12)'}
+            onMouseOut={e => e.currentTarget.style.background = 'rgba(0,0,0,0.06)'}
           >
             <X size={18} />
           </button>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '14px', background: 'rgba(92,56,235,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '14px', background: 'rgba(92,56,235,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <BrainCircuit size={24} color="var(--primary)" />
             </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)' }}>How It Works</h3>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>AI-powered fake news detection pipeline</p>
+              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, color: '#1a1a2e' }}>How It Works</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#666' }}>AI-powered fake news detection pipeline</p>
             </div>
           </div>
 
-          <div style={{ height: '1px', background: 'var(--border-color)', margin: '1.5rem 0' }} />
+          <div style={{ height: '1px', background: 'rgba(0,0,0,0.08)', margin: '1.5rem 0' }} />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {steps.map((step, i) => (
               <div
                 key={i}
-                style={{ display: 'flex', gap: '1rem', padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '1.25rem', border: '1px solid var(--border-color)', alignItems: 'flex-start' }}
+                style={{ display: 'flex', gap: '1rem', padding: '1.1rem 1.25rem', background: 'rgba(255,255,255,0.6)', borderRadius: '1.1rem', border: '1px solid rgba(0,0,0,0.07)', alignItems: 'flex-start' }}
               >
-                <div style={{ fontSize: '1.5rem', lineHeight: 1, flexShrink: 0, marginTop: '2px' }}>{step.icon}</div>
+                <div style={{ fontSize: '1.4rem', lineHeight: 1, flexShrink: 0, marginTop: '2px' }}>{step.icon}</div>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)', marginBottom: '0.35rem' }}>{step.title}</div>
-                  <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{step.desc}</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#1a1a2e', marginBottom: '0.3rem' }}>{step.title}</div>
+                  <div style={{ fontSize: '0.85rem', color: '#555', lineHeight: 1.6 }}>{step.desc}</div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', background: 'rgba(92,56,235,0.06)', borderRadius: '1rem', border: '1px solid rgba(92,56,235,0.15)', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-            <Info size={18} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--primary)' }} />
-            <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-              After results appear, click <strong style={{ color: 'var(--text-main)' }}>"How is this calculated?"</strong> next to the report heading for a detailed breakdown of each model's weight in the final score.
+          <div style={{ marginTop: '1.25rem', padding: '0.9rem 1.1rem', background: 'rgba(92,56,235,0.07)', borderRadius: '1rem', border: '1px solid rgba(92,56,235,0.18)', display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+            <Info size={17} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--primary)' }} />
+            <span style={{ fontSize: '0.85rem', color: '#444', lineHeight: 1.6 }}>
+              After results appear, click <strong style={{ color: '#1a1a2e' }}>"How is this calculated?"</strong> next to the report heading for a detailed breakdown of each model's weight in the final score.
             </span>
           </div>
         </div>

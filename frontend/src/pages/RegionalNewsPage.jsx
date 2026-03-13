@@ -15,19 +15,22 @@ const RegionalNewsPage = () => {
   const [error, setError] = useState(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
-  // Helper to map OpenStreetMap state names to our TopoJSON names
-  const normalizeStateName = (osmState) => {
-    if (!osmState) return null;
+  // Helper to normalize state names — used for BOTH geolocation and map clicks
+  // because the TopoJSON stores Delhi as 'NCT of Delhi', OpenStreetMap returns 'Delhi'
+  // and the backend searches/regexes need a consistent, simple name like 'Delhi'.
+  const normalizeStateName = (rawState) => {
+    if (!rawState) return null;
     const mapping = {
-      'Delhi': 'Delhi',
+      'NCT of Delhi': 'Delhi',
       'National Capital Territory of Delhi': 'Delhi',
-      'Arunachal Pradesh': 'Arunanchal Pradesh', // Match local typo
+      'Delhi': 'Delhi',
+      'Arunachal Pradesh': 'Arunanchal Pradesh', // Match local typo in TopoJSON
       'Dadra and Nagar Haveli and Daman and Diu': 'Dadara and Nagar Havelli',
       'Andaman and Nicobar Islands': 'Andaman and Nicobar',
       'Odisha': 'Odisha',
       'Orissa': 'Odisha'
     };
-    return mapping[osmState] || osmState;
+    return mapping[rawState] || rawState;
   };
 
   // 1. Detect location on mount
@@ -234,7 +237,7 @@ const RegionalNewsPage = () => {
                 opacity: 0.05, pointerEvents: 'none' 
               }} />
               
-              <IndiaMap selectedState={selectedState} onStateClick={setSelectedState} />
+              <IndiaMap selectedState={selectedState} onStateClick={(name) => setSelectedState(normalizeStateName(name))} />
             </div>
           </div>
         </div>

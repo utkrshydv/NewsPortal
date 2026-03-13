@@ -722,6 +722,11 @@ a {
   }
 }
 
+/* Hide scrollbar visually while keeping scroll functionality */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ============================================================
    MOBILE RESPONSIVENESS
    All overrides are ADDITIONS below this line.
