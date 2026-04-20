@@ -7,7 +7,7 @@ import MobileBackButton from '../components/MobileBackButton';
 
 const VerifyNewsPage = () => {
   const [text, setText] = useState('');
-  const [dataset, setDataset] = useState('liar');
+  const [dataset, setDataset] = useState('isot');
   const [engineData, setEngineData] = useState({
     welfake: null,
     liar: null,
@@ -402,17 +402,17 @@ const VerifyNewsPage = () => {
               <div className="glass-panel" style={{ padding: '0.4rem', borderRadius: '1.25rem', display: 'flex', gap: '0.4rem', background: 'rgba(255,255,255,0.03)', width: '100%' }}>
                 <button 
                   type="button"
-                  onClick={() => setDataset('liar')}
-                  style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'liar' ? 'var(--primary)' : 'transparent', color: dataset === 'liar' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'liar' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
-                >
-                  LIAR Engine
-                </button>
-                <button 
-                  type="button"
                   onClick={() => setDataset('isot')}
                   style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'isot' ? 'var(--primary)' : 'transparent', color: dataset === 'isot' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'isot' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
                 >
                   ISOT Engine
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setDataset('liar')}
+                  style={{ flex: 1, padding: '1rem', borderRadius: '1rem', fontWeight: 700, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', background: dataset === 'liar' ? 'var(--primary)' : 'transparent', color: dataset === 'liar' ? 'white' : 'var(--text-muted)', boxShadow: dataset === 'liar' ? '0 4px 12px rgba(92, 56, 235, 0.2)' : 'none' }}
+                >
+                  LIAR Engine
                 </button>
                 <button 
                   type="button"
@@ -555,113 +555,33 @@ const VerifyNewsPage = () => {
       )}
 
       {/* Analytics Dashboard Grid */}
-      {results && consensus && (
+      {results && (
         <div ref={resultsRef} style={{ animation: 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)', paddingTop: '2rem' }}>
+          {/* Results Header */}
           <div className="verify-results-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '0.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <BarChart3 size={28} color="var(--primary-color)" />
-              <h2 style={{ fontSize: '1.8rem', margin: 0 }}>Analysis Intelligence Report</h2>
+              <h2 style={{ fontSize: '1.8rem', margin: 0 }}>Individual Prediction Results</h2>
             </div>
-            
-            <button 
+            <button
               onClick={() => setShowInfoModal(true)}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface-color)', border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: '2rem', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface-color)', border: '1px solid var(--border-color)', padding: '0.5rem 1rem', borderRadius: '2rem', color: 'var(--text-secondary)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
               onMouseOver={(e) => { e.currentTarget.style.color = 'var(--primary-color)'; e.currentTarget.style.borderColor = 'var(--primary-color)'; }}
               onMouseOut={(e) => { e.currentTarget.style.color = 'var(--text-secondary)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
             >
-              <Info size={18} /> How is this calculated?
+              <Info size={18} /> Model Weights
             </button>
           </div>
-          
-          <div className="verify-results-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
-            
-            {/* Verdict Card */}
-            <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, height: '6px', background: consensus.prediction === 'Fake' ? 'linear-gradient(90deg, #ef4444, #f87171)' : 'linear-gradient(90deg, #22c55e, #4ade80)', width: '100%' }}></div>
-              <div>
-                <h3 style={{ fontSize: '1rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem', fontWeight: 700 }}>Final Verdict</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                  <div style={{ background: consensus.prediction === 'Fake' ? '#fee2e2' : '#dcfce7', padding: '1rem', borderRadius: '1rem' }}>
-                    {consensus.prediction === 'Fake' ? <ShieldAlert size={48} color="#ef4444" /> : <ShieldCheck size={48} color="#22c55e" />}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '3rem', fontWeight: 900, lineHeight: 1, color: consensus.prediction === 'Fake' ? '#b91c1c' : '#15803d', letterSpacing: '-0.02em' }}>
-                      {consensus.prediction.toUpperCase()}
-                    </div>
-                    <div style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginTop: '0.5rem', fontWeight: 500 }}>
-                      {weightedConsensus && weightedConsensus.final_score !== undefined ? (
-                        <><strong style={{ color: 'var(--text-color)' }}>{Math.round(weightedConsensus.final_score * 100)}%</strong> overall fake probability</>
-                      ) : weightedConsensus ? (
-                        <><strong style={{ color: 'var(--text-color)' }}>{Math.max(weightedConsensus.fake_weight_total, weightedConsensus.real_weight_total)}%</strong> network consensus</>
-                      ) : (
-                        <><strong style={{ color: 'var(--text-color)' }}>{consensus.votePercentage}%</strong> model consensus</>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div style={{ marginTop: '2rem', padding: '1.25rem', background: 'var(--background-color)', borderRadius: '1rem', color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.5, display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                <Activity size={18} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--primary-color)' }} />
-                <span>
-                  {weightedConsensus && weightedConsensus.ml_score !== undefined ? (
-                    <>Base ML score determines a <strong>{Math.round(weightedConsensus.ml_score * 100)}% fake probability</strong>. Real-Time Web Search verifies this, providing a confidence adjustment of <strong>{weightedConsensus.web_adjustment > 0 ? '+' : ''}{Math.round(weightedConsensus.web_adjustment * 100)}%</strong> to the final consensus.</>
-                  ) : (
-                    <>The ensemble network concludes this text has a high probability of being <strong>{consensus.prediction.toLowerCase()}</strong> based on aggregate lexical and semantic scoring.</>
-                  )}
-                </span>
-              </div>
-            </div>
 
-            {/* Pie Chart Card - Vote Distribution */}
-            <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                   <PieChartIcon size={18} /> Final Probability Scoring
-                </h3>
-              </div>
-              
-              <div style={{ flex: 1, minHeight: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ResponsiveContainer width="100%" height={220}>
-                  <PieChart>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      paddingAngle={5}
-                      dataKey="value"
-                      stroke="none"
-                    >
-                      {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <RechartsTooltip 
-                      formatter={(value, name) => [`${value}${weightedConsensus ? '%' : ' Models'}`, name]}
-                      contentStyle={{ borderRadius: '8px', border: '1px solid var(--border-color)', fontWeight: 600 }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#22c55e' }}></div>
-                  <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Real ({weightedConsensus && weightedConsensus.final_score !== undefined ? Math.round((1 - weightedConsensus.final_score) * 100) + '%' : weightedConsensus ? weightedConsensus.real_weight_total + '%' : consensus.realCount})</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ef4444' }}></div>
-                  <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Fake ({weightedConsensus && weightedConsensus.final_score !== undefined ? Math.round(weightedConsensus.final_score * 100) + '%' : weightedConsensus ? weightedConsensus.fake_weight_total + '%' : consensus.fakeCount})</span>
-                </div>
-              </div>
-            </div>
-
+          {/* Section 1: Web Search */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+            <Globe size={20} color="var(--primary-color)" />
+            <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-color)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Section 1 — Real-Time Web Search Prediction</span>
           </div>
 
           {/* Live Web Verification Card */}
-          {webVerification && (
-            <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', marginBottom: '3rem', position: 'relative', overflow: 'hidden' }}>
+          {webVerification ? (
+            <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', marginBottom: '2.5rem', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, height: '6px', background: webVerification.score > 50 ? 'linear-gradient(90deg, #22c55e, #4ade80)' : webVerification.score > 0 ? 'linear-gradient(90deg, #eab308, #fde047)' : 'linear-gradient(90deg, #ef4444, #f87171)', width: '100%' }}></div>
               <h3 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', fontWeight: 700, color: 'var(--text-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                  <Globe size={22} color="var(--primary-color)" /> Real-Time Web Verification
@@ -726,7 +646,13 @@ const VerifyNewsPage = () => {
                 </div>
               </div>
             </div>
+          ) : (
+            <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '1.5rem 2rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', opacity: 0.7 }}>
+              <AlertCircle size={20} color="var(--text-muted)" />
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Web search results were not available for this analysis.</span>
+            </div>
           )}
+
 
           {/* AI Analysis Reasoning Card */}
           {analysis && analysis.length > 0 && (
@@ -736,7 +662,7 @@ const VerifyNewsPage = () => {
               </h3>
               <ul style={{ listStyleType: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {analysis.map((point, index) => (
-                  <li key={index} style={{ padding: '1.25rem', background: 'var(--background-color)', borderRadius: '1rem', borderLeft: consensus && consensus.prediction === 'Fake' ? '4px solid #ef4444' : '4px solid #22c55e', fontSize: '1.05rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+                  <li key={index} style={{ padding: '1.25rem', background: 'var(--background-color)', borderRadius: '1rem', borderLeft: '4px solid var(--primary-color)', fontSize: '1.05rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
                     <span style={{ fontWeight: 600, color: 'var(--text-color)', marginRight: '0.5rem' }}>Point {index + 1}:</span>
                     {point}
                   </li>
@@ -745,100 +671,122 @@ const VerifyNewsPage = () => {
             </div>
           )}
 
-          {/* Per-Model Breakdown Cards */}
+          {/* Section 2: DistilBERT Featured Card */}
+          {results && results.distilbert && (() => {
+            const db = results.distilbert;
+            const isFake = db.prediction.toLowerCase() === 'fake';
+            return (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+                  <BrainCircuit size={20} color="var(--primary-color)" />
+                  <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-color)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Section 2 — DistilBERT Transformer Model (Featured)</span>
+                </div>
+                <div style={{
+                  borderRadius: '1.5rem', padding: '2rem', position: 'relative', overflow: 'hidden',
+                  background: 'linear-gradient(135deg, rgba(92,56,235,0.09) 0%, rgba(139,92,246,0.05) 100%)',
+                  border: '2px solid rgba(92,56,235,0.35)',
+                  boxShadow: '0 8px 32px rgba(92,56,235,0.12)',
+                  marginBottom: '2rem'
+                }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, height: '5px', width: '100%', background: 'linear-gradient(90deg, var(--primary), #8b5cf6)' }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(92,56,235,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <BrainCircuit size={26} color="var(--primary)" />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 900, fontSize: '1.3rem', color: 'var(--primary)' }}>DistilBERT</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', gap: '0.4rem', alignItems: 'center', marginTop: '0.2rem' }}>
+                          <span style={{ background: 'var(--primary)', color: 'white', padding: '0.15rem 0.55rem', borderRadius: '999px', fontWeight: 700, fontSize: '0.7rem' }}>Advanced NLP</span>
+                          <span style={{ background: 'rgba(92,56,235,0.1)', color: 'var(--primary)', padding: '0.15rem 0.55rem', borderRadius: '999px', fontWeight: 700, fontSize: '0.7rem' }}>Transformer</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '2.8rem', fontWeight: 900, lineHeight: 1, color: isFake ? '#b91c1c' : '#15803d' }}>{db.prediction.toUpperCase()}</div>
+                      <div style={{ fontSize: '1rem', fontWeight: 700, color: isFake ? '#ef4444' : '#22c55e', marginTop: '0.25rem' }}>{db.confidence}% confidence</div>
+                    </div>
+                  </div>
+                  <div style={{ width: '100%', height: '8px', background: 'rgba(0,0,0,0.06)', borderRadius: '999px', marginBottom: '1.25rem', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${db.confidence}%`, background: isFake ? 'linear-gradient(90deg,#ef4444,#f87171)' : 'linear-gradient(90deg,#22c55e,#4ade80)', borderRadius: '999px', transition: 'width 1s ease' }} />
+                  </div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>
+                    A distilled version of BERT, DistilBERT retains 97% of BERT's language understanding at 60% of the size. It uses bidirectional transformer attention to analyse full sentence context rather than individual keywords — making it the most linguistically sophisticated model in this ensemble.
+                  </p>
+                  <p style={{ fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1rem' }}>
+                    <strong style={{ color: 'var(--text-color)' }}>Deep Analysis: </strong>
+                    <span style={{ color: isFake ? '#ef4444' : '#22c55e' }}>
+                      {isFake
+                        ? 'Using contextual understanding of language, this model identified patterns of misinformation and detected untrustworthy content.'
+                        : 'Using contextual understanding of language, this model identified characteristics consistent with factual, credible reporting.'}
+                    </span>
+                  </p>
+                  <div style={{ padding: '1rem 1.25rem', background: isFake ? 'rgba(239,68,68,0.06)' : 'rgba(34,197,94,0.06)', border: `1px solid ${isFake ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`, borderRadius: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    {isFake ? <ShieldAlert size={20} color="#ef4444" /> : <ShieldCheck size={20} color="#22c55e" />}
+                    <span style={{ fontWeight: 700, fontSize: '0.92rem', color: isFake ? '#b91c1c' : '#15803d' }}>
+                      DistilBERT Verdict: This article is likely <strong>{db.prediction.toUpperCase()}</strong> with {db.confidence}% confidence.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Section 3: Traditional ML Models — each separately */}
           {results && (() => {
             const modelMeta = {
-              distilbert:   { name: 'DistilBERT', desc: 'A state-of-the-art transformer-based language model that understands context and nuance in text.', advanced: true },
-              lightgbm:     { name: 'LightGBM',   desc: 'A fast, gradient-boosting framework using tree-based learning algorithms.' },
-              xgboost:      { name: 'XGBoost',     desc: 'An optimized gradient boosting library designed for high performance.' },
-              randomforest: { name: 'Random Forest', desc: 'An ensemble of decision trees trained on random subsets of data.' },
-              logistic:     { name: 'Logistic Regression', desc: 'A simple linear model for binary classification problems.' },
-              svm:          { name: 'SVM',         desc: 'Support Vector Machine that finds the optimal hyperplane to separate classes.' },
-              sgd:          { name: 'SGD',         desc: 'Stochastic Gradient Descent — fast linear classifier suited for large text data.' },
-              naive_bayes:  { name: 'Naive Bayes', desc: 'A probabilistic classifier based on Bayes\' theorem with strong independence assumptions.' },
+              lightgbm:     { name: 'LightGBM',            desc: 'A fast, gradient-boosting framework using tree-based learning algorithms.' },
+              xgboost:      { name: 'XGBoost',              desc: 'An optimized gradient boosting library designed for high performance.' },
+              randomforest: { name: 'Random Forest',        desc: 'An ensemble of decision trees trained on random subsets of data.' },
+              logistic:     { name: 'Logistic Regression',  desc: 'A simple linear model for binary classification problems.' },
+              svm:          { name: 'SVM',                  desc: 'Support Vector Machine that finds the optimal hyperplane to separate classes.' },
+              sgd:          { name: 'SGD',                  desc: 'Stochastic Gradient Descent — fast linear classifier suited for large text data.' },
             };
-
             const fakeIndicators = ['Sensationalism', 'Exaggeration', 'Emotional language', 'Lack of sources'];
             const realIndicators = ['Factual language', 'Credible sources', 'Objective tone', 'Verified claims'];
-
-            const modelEntries = Object.entries(results).filter(([k]) => k !== 'naive_bayes');
-
+            const otherEntries = Object.entries(results).filter(([k]) => k !== 'naive_bayes' && k !== 'distilbert');
+            if (!otherEntries.length) return null;
             return (
-              <div className="glass-panel" style={{ borderRadius: '1.5rem', padding: '2rem', boxShadow: '0 4px 20px -5px rgba(0,0,0,0.05)', marginBottom: '3rem' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '1.75rem', fontWeight: 700, color: 'var(--text-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <BrainCircuit size={22} color="var(--primary-color)" /> Per-Model Breakdown
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {modelEntries.map(([key, data]) => {
+              <div style={{ marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+                  <Activity size={20} color="var(--primary-color)" />
+                  <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-color)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Section 3 — Traditional ML Model Predictions</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                  {otherEntries.map(([key, data], idx) => {
                     const meta = modelMeta[key] || { name: key.charAt(0).toUpperCase() + key.slice(1), desc: 'A machine learning classifier.' };
                     const isFake = data.prediction.toLowerCase() === 'fake';
                     const indicators = isFake ? fakeIndicators : realIndicators;
                     const highConf = data.confidence >= 85;
-
                     return (
-                      <div key={key} style={{
-                        padding: '1.25rem 1.5rem',
-                        borderRadius: '1.25rem',
-                        background: meta.advanced
-                          ? 'linear-gradient(135deg, rgba(92,56,235,0.06) 0%, rgba(139,92,246,0.04) 100%)'
-                          : 'var(--background-color)',
-                        border: meta.advanced
-                          ? '1px solid rgba(92,56,235,0.25)'
-                          : '1px solid var(--border-color)',
-                      }}>
-                        {/* Header row */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: meta.advanced ? 'var(--primary-color)' : 'var(--text-color)' }}>
-                              {meta.name}
+                      <div key={key} style={{ borderRadius: '1.25rem', padding: '1.5rem', background: 'var(--background-color)', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: isFake ? '#ef4444' : '#22c55e', borderRadius: '4px 0 0 4px' }} />
+                        <div style={{ paddingLeft: '0.5rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.6rem' }}>
+                            <div>
+                              <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-color)' }}>{`Model ${idx + 1}: `}</span>
+                              <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--primary)' }}>{meta.name}</span>
+                            </div>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 800, padding: '0.3rem 0.8rem', borderRadius: '999px', background: isFake ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)', color: isFake ? '#ef4444' : '#22c55e', border: `1px solid ${isFake ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'}` }}>
+                              {data.prediction.toUpperCase()} — {data.confidence}% confidence
                             </span>
-                            {meta.advanced && (
-                              <span style={{ fontSize: '0.7rem', fontWeight: 700, padding: '0.2rem 0.6rem', borderRadius: '999px', background: 'var(--primary)', color: 'white', letterSpacing: '0.04em' }}>
-                                Advanced NLP
-                              </span>
-                            )}
                           </div>
-                          <span style={{
-                            fontSize: '0.85rem', fontWeight: 800, padding: '0.3rem 0.8rem', borderRadius: '999px',
-                            background: isFake ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
-                            color: isFake ? '#ef4444' : '#22c55e',
-                            border: `1px solid ${isFake ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'}`,
-                          }}>
-                            {data.prediction.toUpperCase()} ({data.confidence}%)
-                          </span>
-                        </div>
-
-                        {/* Description */}
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', margin: '0 0 0.85rem 0', lineHeight: 1.5 }}>
-                          {meta.desc}
-                        </p>
-
-                        {/* Analysis line */}
-                        <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                          <span style={{ fontWeight: 700, color: 'var(--text-color)' }}>
-                            {meta.advanced ? 'Deep Analysis: ' : 'Analysis: '}
-                          </span>
-                          <span style={{ color: isFake ? '#ef4444' : '#22c55e' }}>
-                            {meta.advanced
-                              ? `Using contextual understanding of language, this model identified ${isFake ? 'patterns of misinformation and detected untrustworthy content' : 'characteristics consistent with factual, credible reporting'}.`
-                              : `This model identified patterns typically found in ${isFake ? 'fabricated' : 'credible'} news sources${highConf ? ' with high certainty' : ''}.`}
-                          </span>
-                        </p>
-
-                        {/* Key indicator tags */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
-                          <span style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--text-muted)', marginRight: '0.25rem' }}>Key indicators:</span>
-                          {indicators.map(tag => (
-                            <span key={tag} style={{
-                              fontSize: '0.8rem', fontWeight: 600,
-                              padding: '0.2rem 0.65rem', borderRadius: '999px',
-                              background: isFake ? 'rgba(239,68,68,0.08)' : 'rgba(34,197,94,0.08)',
-                              color: isFake ? '#ef4444' : '#22c55e',
-                              border: `1px solid ${isFake ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}`,
-                            }}>
-                              {tag}
+                          <div style={{ width: '100%', height: '5px', background: 'rgba(0,0,0,0.06)', borderRadius: '999px', marginBottom: '0.75rem', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${data.confidence}%`, background: isFake ? '#ef4444' : '#22c55e', borderRadius: '999px', transition: 'width 1s ease' }} />
+                          </div>
+                          <p style={{ color: 'var(--text-secondary)', fontSize: '0.86rem', margin: '0 0 0.6rem 0', lineHeight: 1.5 }}>{meta.desc}</p>
+                          <p style={{ margin: '0 0 0.6rem 0', fontSize: '0.88rem', lineHeight: 1.5 }}>
+                            <span style={{ fontWeight: 700, color: 'var(--text-color)' }}>Analysis: </span>
+                            <span style={{ color: isFake ? '#ef4444' : '#22c55e' }}>
+                              {`This model identified patterns typically found in ${isFake ? 'fabricated' : 'credible'} news sources${highConf ? ' with high certainty' : ''}.`}
                             </span>
-                          ))}
+                          </p>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 700, fontSize: '0.8rem', color: 'var(--text-muted)', marginRight: '0.2rem' }}>Key indicators:</span>
+                            {indicators.map(tag => (
+                              <span key={tag} style={{ fontSize: '0.78rem', fontWeight: 600, padding: '0.18rem 0.6rem', borderRadius: '999px', background: isFake ? 'rgba(239,68,68,0.08)' : 'rgba(34,197,94,0.08)', color: isFake ? '#ef4444' : '#22c55e', border: `1px solid ${isFake ? 'rgba(239,68,68,0.2)' : 'rgba(34,197,94,0.2)'}` }}>{tag}</span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     );
