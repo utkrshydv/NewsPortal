@@ -69,11 +69,11 @@ A full-stack news aggregation and AI-powered fake news verification platform tha
 │  Atlas       │  │  APIs        │  │  (FastAPI)              │
 │              │  │              │  │                         │
 │ • Users      │  │ • NewsData   │  │ • 3 Engines (ISOT,      │
-│ • Articles   │  │ • Google     │  │   LIAR, WELFake)         │
-│ • History    │  │   Trends     │  │ • DistilBERT Transformer │
-│ • Interactions│ │ • Serper     │  │ • 6 sklearn Models       │
-│              │  │ • Groq LLM   │  │ • Web Verification (NLI) │
-│              │  │ • Fact Check │  │ • AI Reasoning (Groq)    │
+│ • Articles   │  │ • Google     │  │   LIAR, WELFake)        │
+│ • History    │  │   Trends     │  │ • DistilBERT Transformer│
+│ • Interactions│ │ • Serper     │  │ • 6 sklearn Models      │
+│              │  │ • Groq LLM   │  │ • Web Verification (NLI)│
+│              │  │ • Fact Check │  │ • AI Reasoning (Groq)   │
 └──────────────┘  └──────────────┘  └─────────────────────────┘
 ```
 
@@ -286,7 +286,7 @@ The app will be available at `http://localhost:5173`
 ### ISOT Engine (with DistilBERT)
 | Model | Accuracy | Weight |
 |-------|----------|--------|
-| DistilBERT | ~97% | 45% |
+| DistilBERT | ~92% | 45% |
 | XGBoost | ~95% | 20% |
 | LightGBM | ~94% | 18% |
 | Random Forest | ~93% | 12% |
