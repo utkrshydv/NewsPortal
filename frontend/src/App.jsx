@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import Header from './components/Header';
 import OnboardingModal from './components/OnboardingModal';
 import AuthModal from './components/AuthModal';
@@ -16,10 +17,52 @@ import './index.css';
 function AppLayout() {
   const { pathname } = useLocation();
   const isAuth = pathname === '/login' || pathname === '/register';
+  const [showBanner, setShowBanner] = useState(true);
 
   return (
     <div className="app">
       <FloatingBackground />
+
+      {showBanner && (
+        <div style={{
+          background: 'linear-gradient(90deg, rgba(92,56,235,0.1), rgba(139,92,246,0.08))',
+          borderBottom: '1px solid rgba(92,56,235,0.15)',
+          padding: '0.45rem 1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          fontSize: '0.78rem',
+          color: 'var(--text-muted)',
+          position: 'relative',
+          zIndex: 1000,
+        }}>
+          <span style={{ opacity: 0.7 }}>⚡</span>
+          <span>
+            <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>*</strong> Backend hosted on a free service — initial requests may take <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>30–60s</strong> to wake up.
+          </span>
+          <button
+            onClick={() => setShowBanner(false)}
+            aria-label="Dismiss banner"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              padding: '0 0.25rem',
+              lineHeight: 1,
+              opacity: 0.6,
+              transition: 'opacity 0.2s',
+            }}
+            onMouseOver={e => e.currentTarget.style.opacity = '1'}
+            onMouseOut={e => e.currentTarget.style.opacity = '0.6'}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <Header />
 
       <main className="container">
