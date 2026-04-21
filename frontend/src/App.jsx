@@ -39,7 +39,7 @@ function AppLayout() {
         }}>
           <span style={{ opacity: 0.7 }}>⚡</span>
           <span>
-            <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>*</strong> Backend hosted on a free service — initial requests may take <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>30–60s</strong> to wake up.
+            <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}></strong> Backend hosted on a free service — initial requests may take <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>30–60s</strong> to wake up.
           </span>
           <button
             onClick={() => setShowBanner(false)}
