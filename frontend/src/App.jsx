@@ -11,6 +11,7 @@ import BookmarksPage from './pages/BookmarksPage';
 import HistoryPage from './pages/HistoryPage';
 import RegionalNewsPage from './pages/RegionalNewsPage';
 import SearchPage from './pages/SearchPage';
+import DocsPage from './pages/DocsPage';
 import FloatingBackground from './components/FloatingBackground';
 import './index.css';
 
@@ -81,6 +82,7 @@ function AppLayout() {
           <Route path="/history"  element={<HistoryPage />} />
           <Route path="/map"      element={<RegionalNewsPage />} />
           <Route path="/search"   element={<SearchPage />} />
+          <Route path="/docs"     element={<DocsPage />} />
         </Routes>
       </main>
     </div>

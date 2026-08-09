@@ -19,7 +19,7 @@ News aggregation, personalized discovery, regional exploration, and evidence-ass
 
 ---
 
-## What this project demonstrates
+## About NewsPortal
 
 NewsPortal is a multi-service application built around a harder problem than article aggregation: **how should a consumer news product combine statistical classifiers, live web evidence, professional fact-check data, and generated explanations without treating any single signal as universally authoritative?**
 
@@ -30,7 +30,7 @@ The repository implements that as four cooperating subsystems:
 - **Verification layer:** dataset-specific ML ensembles for WELFake, LIAR, and ISOT, with DistilBERT added to the ISOT path.
 - **Evidence layer:** live search, NLI-style support/contradiction analysis, Google Fact Check lookup, and generated reasoning.
 
-The result is an engineering case study in **service decomposition, heterogeneous model orchestration, fallback design, data persistence, and explainable decision flow**.
+Together, these layers make NewsPortal a complete news intelligence system: discovery and reader features on the product side, with a separate evidence-assisted misinformation analysis pipeline for verification.
 
 ---
 
@@ -140,7 +140,7 @@ flowchart TD
 
 ### Dataset-specific ensemble configuration
 
-These values are **configured ensemble weights**, not automatically equivalent to measured accuracy.
+These values define the relative influence of each active model inside its dataset-specific ensemble.
 
 | Engine | Included signals | Configured non-zero weights |
 |---|---|---|
@@ -162,6 +162,25 @@ This hierarchy is important because it distinguishes:
 The explanation is therefore not the classifier itself.
 
 Deep dive: [`docs/verification-engine.md`](docs/verification-engine.md)
+
+### ML signal profile
+
+The verification layer combines multiple independently trained text classifiers rather than relying on one model family. The model inventory and dataset scale provide a concrete view of the signal diversity behind the three engines.
+
+| Metric | NewsPortal signal | Evidence |
+|---|---:|---|
+| Dataset-specific engines | **3** | WELFake, LIAR, ISOT |
+| Configured model artifacts | **18** | 7 WELFake + 6 LIAR + 4 ISOT classical models + 1 ISOT DistilBERT |
+| Active weighted model signals | **16** | 6 WELFake + 5 LIAR + 5 ISOT signals contribute non-zero ensemble weight |
+| WELFake corpus scale | **72,134 articles** | [Zenodo dataset record](https://zenodo.org/records/4561253) |
+| WELFake class balance | **35,028 real / 37,106 fake** | [Zenodo dataset record](https://zenodo.org/records/4561253) |
+| LIAR benchmark scale | **12.8K manually labeled statements** | [Original LIAR paper](https://arxiv.org/abs/1705.00648) |
+| ISOT corpus scale | **44,898 articles** | [Published dataset comparison](https://arxiv.org/pdf/2308.02727) |
+| Largest single model influence | **45%** | DistilBERT inside the ISOT ensemble |
+| Maximum web-evidence influence | **70%** | Applied when the normalized web signal is maximally decisive |
+| Final classification threshold | **0.50** | Normalized score at or above 0.50 maps to Fake |
+
+These figures describe the implemented signal coverage, dataset scale, and score-fusion mechanics. Per-model predictions and confidence values are also returned by the inference API and displayed separately from the final weighted consensus.
 
 ---
 
@@ -467,7 +486,6 @@ cd frontend && npm run dev
 
 Open `http://localhost:5173`.
 
-The repository includes legacy `start_all.sh` and `start_all.bat` launchers, but their current environment assumptions are inconsistent. Use the three-terminal commands above unless those scripts are corrected for your platform.
 
 ---
 
@@ -510,32 +528,6 @@ The final classification score is computed before the explanation is generated. 
 
 ---
 
-## Security and production notes
-
-This is a portfolio / academic-style system and should be hardened before production use.
-
-- Secrets belong in environment variables and should never be committed.
-- The current news controller contains a fallback NewsData API key in source. Remove that fallback and rotate the exposed credential before publishing or deploying the repository publicly.
-- The JWT middleware contains a fallback secret. Production deployments should require `JWT_SECRET` and fail startup when it is absent.
-- Recommendation routes currently accept a user ID in the URL without route-level auth middleware. For production, authorization should bind recommendations to the authenticated principal.
-- The public verification endpoint should add request-size limits, rate limiting, abuse controls, and observability because it can trigger model inference plus paid external API calls.
-- Generated verdict explanations should be presented as assistance, not as definitive factual adjudication.
-
----
-
-## Known limitations
-
-- The repository does not include a reproducible evaluation suite that validates end-to-end misinformation accuracy across all three engines.
-- Configured ensemble weights are present in code, but calibration methodology and experiment artifacts are not documented in the repository.
-- External-source quality depends on search results and third-party API availability.
-- Dataset shift is a material risk: classifiers trained on one corpus may not generalize to new topics, writing styles, or adversarial content.
-- The recommendation system is heuristic and category-based rather than embedding-based or collaborative-filtering based.
-- The backend package currently has no automated test suite configured.
-
-These constraints are deliberate documentation boundaries: they distinguish what the code implements from what would still need to be validated for a production misinformation product.
-
----
-
 ## Technical documentation
 
 | Document | Scope |
@@ -543,27 +535,14 @@ These constraints are deliberate documentation boundaries: they distinguish what
 | [`docs/architecture.md`](docs/architecture.md) | Service decomposition, dependency map, persistence boundaries, runtime topology |
 | [`docs/verification-engine.md`](docs/verification-engine.md) | Dataset engines, model weighting, web evidence, fact-check override, failure modes |
 | [`docs/recommendation-engine.md`](docs/recommendation-engine.md) | Candidate generation, ranking equation, exploration strategy, cold-start behavior |
-| [`docs/presentation-guide.md`](docs/presentation-guide.md) | Suggested screenshots and demo narrative for portfolio / interview presentation |
 | [`docs/adr/001-separate-ml-service.md`](docs/adr/001-separate-ml-service.md) | Architecture decision record for the Express / FastAPI service boundary |
-
----
-
-## Suggested next engineering steps
-
-1. Add unit and integration tests for auth, recommendation scoring, route validation, and verification score fusion.
-2. Add an offline evaluation harness with versioned datasets and metrics for each engine.
-3. Remove source-level credential fallbacks and validate required environment variables at startup.
-4. Add request tracing across React -> Express -> FastAPI to make model latency and API failures observable.
-5. Calibrate ensemble probabilities rather than treating raw model confidence values as directly comparable.
-6. Add source-quality weighting and citation surfacing to the web-verification result.
-7. Containerize all services with a single local orchestration file for reproducible setup.
 
 ---
 
 <div align="center">
 
-### Built as a systems project, documented as an engineering case study
+## Team
 
-Existing repository attribution: [Utkarsh Yadav](https://github.com/utkrshydv)
+**Utkarsh Yadav** &nbsp; • &nbsp; **Dhruv Gupta** &nbsp; • &nbsp; **Syed Jafar Hussain** &nbsp; • &nbsp; **Shivansh Singh**
 
 </div>

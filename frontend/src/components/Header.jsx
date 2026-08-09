@@ -1,6 +1,6 @@
 import { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Newspaper, ShieldCheck, User, LogOut, Bookmark, History, MapPin, Search, Moon, Sun, Menu, X } from 'lucide-react';
+import { Newspaper, ShieldCheck, User, LogOut, Bookmark, History, MapPin, Search, Moon, Sun, Menu, X, BookOpen } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import WeatherWidget from './WeatherWidget';
 
@@ -115,7 +115,7 @@ const Header = () => {
         {/* RIGHT: Navigation, Weather & Profile — hidden on mobile */}
         <div className="header-desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', justifyContent: 'flex-end', flexShrink: 0 }}>
           <nav style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
-            <Link to="/" style={{ fontWeight: 600, color: 'var(--text-main)', textDecoration: 'none', transition: 'color 0.2s', fontSize: '0.95rem' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-main)'}>Home</Link>
+            <Link to="/docs" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600, color: 'var(--text-main)', textDecoration: 'none', transition: 'color 0.2s', fontSize: '0.95rem' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-main)'}><BookOpen size={16} /> Docs</Link>
             <Link to="/map" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 500, color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s', fontSize: '0.95rem' }} onMouseEnter={(e) => e.target.style.color = 'var(--primary)'} onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}>
               <MapPin size={16} /> Regional
             </Link>
@@ -328,8 +328,8 @@ const Header = () => {
 
             {/* Navigation Links */}
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <Link to="/" onClick={handleMobileNavClick} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.85rem 1rem', fontWeight: 600, color: 'var(--text-main)', textDecoration: 'none', borderRadius: '10px', fontSize: '1rem', background: 'var(--card-bg)' }}>
-                <Newspaper size={18} color="var(--primary)" /> Home
+              <Link to="/docs" onClick={handleMobileNavClick} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.85rem 1rem', fontWeight: 600, color: 'var(--text-main)', textDecoration: 'none', borderRadius: '10px', fontSize: '1rem', background: 'var(--card-bg)' }}>
+                <BookOpen size={18} color="var(--primary)" /> Documentation
               </Link>
               <Link to="/map" onClick={handleMobileNavClick} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.85rem 1rem', fontWeight: 500, color: 'var(--text-muted)', textDecoration: 'none', borderRadius: '10px', fontSize: '1rem' }}>
                 <MapPin size={18} /> Regional News
